@@ -6,6 +6,9 @@
         - [Key Componnets](#key-components)
         - [Fundamentals](#graph-fundamentals)
         - [How to Build Graph](#graph-construction)
+    - [Agentic AI](#3-agentic-ai)
+        - [What is Agentic AI](#what-are-ai-agents)
+        - [Smart Home Scenario](#one-example-of-an-ai-agent)
 ## Concepts
 ### 1. LangChain
 #### What is LangChain?
@@ -385,3 +388,56 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 4. **Compiling the Graph**
 - Once nodes and edges are added, we **compile** the graph.
 - Compiling performs a **basic structure check** to ensure the workflow is valid before execution.
+
+## 3. Agentic AI
+### Defining the Spectrum: From AI Agents to Agentic AI
+#### What are AI Agents?
+#### The Three Capabilities of AI Agents
+1. **Autonomy**
+- “The ability to function with minimal human intervention after initial deployment…”
+- This means once you give the agent a goal, it should:
+    - continue working without being manually guided
+    - sense new inputs (e.g., new emails)
+    - reason about the next step
+    - adapt based on context
+    - execute actions automatically
+2. **Task-Specificity**
+- “Each agent is optimized for narrow, well-defined tasks…”
+- AI agents are usually **specialists**, not generalists.
+- Examples of specialized agents:
+    - an email triage agent
+    - a database query agent
+    - an RAG retrieval agent
+    - 
+
+### One example of an AI Agent
+![Smart Home Scenario](/images/agent_workflow1.png)
+#### 1. **User** → **AI Agent**
+- The user asks: **“Latest AI News?”**
+- This question goes into the **AI Agent** (the little robot icon on the left).
+- Inside the agent, it now has a goal:
+    - “Find the latest AI news and tell it to the user.”
+- So the agent needs a **plan**:
+    1. Search the web for AI news
+    2. Read the results
+    3. Summarize them
+    4. Send a concise answer back
+#### 2. **Agent → “AI News” Search Query**
+- The grey box labeled “**AI News** 🔍” is the agent deciding what tool call/search query to make.
+- The agent converts the user question into a concrete action:
+- This is the tool-use step of the agent.
+#### 3. “AI News” Query → WWW (the web)
+- The **WWW icon** represents the **internet / external environment**.
+- The agent (through a tool) sends the search query to the web:
+    - Google/Bing/News API, etc.
+- The web responds with:
+    - news articles
+    - titles
+    - snippets
+    - descriptions
+- This is the **perception** step: the agent is gathering raw information from the environment.
+#### 4. WWW → Raw News Content
+- The curved arrow from the WWW back down to the grey text box (e.g., “Tech company unveils…”)
+- represents:
+    - The web returns **news articles**
+    - 

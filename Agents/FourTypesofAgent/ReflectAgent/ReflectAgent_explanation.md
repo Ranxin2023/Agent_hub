@@ -48,6 +48,21 @@ tavily_tool = TavilySearchResults(max_results=1)
 ```
 - This gives the agent "internet lookup" ability.
 
+### Tavily
+- **What is Tavily?**
+    - Tavily is a **developer-focused web search API** optimized specifically for LLMs and autonomous agents.
+    - Unlike Google or Bing search APIs built for general search, Tavily is designed to:
+        - Give clean, structured, LLM-friendly results
+        - Focus on accuracy, information-dense summaries, and minimal noise
+        - Provide RAG-friendly output for agents
+- **Why Tavily Exists**
+    - Traditional search engines (Google/Bing):
+        - Return noisy HTML
+        - Are tuned for human browsers, not LLMs
+        - Provide irrelevant ads
+        - Require scraping
+        - Don’t return clean JSON
+        - Are hard for agents to process
 ## 6. Define the Reflection Logic
 - The notebook defines two main chains:
 ### (a) Respond Chain — Produce Initial Answer
@@ -56,6 +71,11 @@ tavily_tool = TavilySearchResults(max_results=1)
 llm = ChatOpenAI(model="gpt-4.1-mini")
 
 ```
+- Its job:
+    - Read your question
+    - Produce a first draft answer
+    - If necessary, call `tavily_search` tool
+    
 ### (B) Revisor Chain — Evaluate and Improve Answer
 - This chain takes the answer list:
 ```python
