@@ -441,3 +441,48 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 - represents:
     - The web returns **news articles**
     - 
+
+### Agentic AI
+#### What is Agentic AI
+#### 1. Task Decomposition
+- **Meaning**:
+    - Agentic AI automatically breaks a large goal into smaller, solvable subtasks.
+- **Example**:
+    - User says:
+        - “Plan my vacation.”
+    - A single-task agent might fail.
+    - But an agentic system breaks it into:
+        1. Book flights 
+        2. Find hotels
+        3. Check visa requirements
+        4. Compare prices
+        5. Generate itinerary
+        
+#### 2. Inter-Agent Communication
+- **Meaning**:
+    - Multiple agents communicate with each other—like digital coworkers in Slack.
+- **Example**
+    - Flight agent → sends booked flight details to itinerary agent
+    - Hotel agent → sends hotel details to pricing agent
+    - Visa agent → sends visa info to scheduling agent
+- **Why this matters**:
+    - Allows collaborative problem solving
+    - Enables division of labor
+    - Allows agents to adapt based on each other's output
+    - Makes the system dynamically intelligent
+- **How it relates to your Reflect Agent:**
+    - You currently have 1 agent (planner/reflecting agent).
+    - In a multi-agent setup:
+        - Task Planner → decomposes
+        - Search Agent → fetches info
+        - Summarizer Agent → writes summary
+        - Reflection Agent → checks mistakes
+    - You can easily expand into this pattern.
+#### 3. Memory and Reflection
+
+- Agentic AI can:
+- **Remember past steps**:
+    - (What it already tried, what worked, what failed)
+- **Reflect on its output**:
+    - (“Is this correct?”, “Should I fix this?”, “Should I retry?”)
+- **Learn from mistakes**
