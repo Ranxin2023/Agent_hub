@@ -604,4 +604,69 @@ IF (condition) → THEN (action)
 1. **Environment (Right Side)**
 - This is the external world where changes happen — for example:
     - Temperature in a room
+    - Traffic on a road
+    - Pressure on a sensor
+    - Human input
+    - Surrounding objects
+- The environment constantly provides **raw data**.
+2. **Precepts (Sensors → Precepts Circle)**
+- “Precept” = the agent’s internal representation of what it senses
+- It is not the real world itself — it is what the agent perceives about the world.
+- Example:
+    - Temperature = 65°F
+    - Car detected on lane A
+    - Motion detected
+    - Light level is low
+- The **sensors** convert environment signals → into precepts.
+
+3. **Sensors (left arrow from Precepts)**
+- Sensors are the mechanisms the agent uses to **read** the environment.
+- Examples of sensors:
+
+### 2. Model-based reflex agents
+#### What Is a Model-Based Reflex Agent? (Big Picture)
+- A model-based reflex agent is the next step up from a simple reflex agent.
+- 
+
+#### Workflow
+![Model Based Reflex Workflow](images/Model_based_reflex_workflow.png)
+- **Overview: What This Diagram Shows**
+    - This diagram explains how a Model-Based Reflex Agent works internally.
+    - Compared to a simple reflex agent, this one has:
+        - Memory (State)
+        - A model of how the world works
+        - A model of how the agent’s actions change the environment
+    - These extra components let the agent:
+        - handle partial observability
+        - remember past events
+        - 
+##### 1. Environment (Right Side)
+- The environment sends **raw data** to sensors:
     - 
+##### 2. Precepts (Purple Circle)
+##### 4. Three New Internal Components Inside the Agent (the model)
+- **(A) State**
+    - This stores:
+        - what the agent believes about the world
+        - past information
+        - inferred information
+        - hidden information
+        - things not currently observable
+    - Examples:
+        - The robot remembers that behind it is a wall
+        - The agent remembers that it turned left last step
+        - The locations of previously seen obstacles
+        - A record of areas already explored
+- **(B) How the World Evolves (Transition Model)**
+    - This is an internal model describing:
+        - how the world changes over time
+        - how objects usually move
+        - how conditions update
+
+- **(C) What My Actions Do (Action Model)**
+
+##### 5. Updating State
+- The State is updated using two sources:
+1. What the world is like now (current perception)
+2. How the world evolves (transition model)
+3. What my actions do (action model)
