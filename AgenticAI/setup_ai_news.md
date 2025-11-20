@@ -14,4 +14,4 @@ streamlit run Agents/AgenticAI/streamlit_app.py
 ```
 
 ## After running, it should looks like that
-![AI News Result](../../images/ai_news_result.png)
+![AI News Result](../images/ai_news_result.png)

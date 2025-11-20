@@ -1,17 +1,19 @@
 # AgentHub
 ## Table Of Contents
-- [Concepts](#concepts)
-    - [LangChain](#1-langchain)
-    - [LangGraph](#2-langgraph)
-        - [Key Componnets](#key-components)
-        - [Fundamentals](#graph-fundamentals)
-        - [How to Build Graph](#graph-construction)
-    - [Agentic AI](#3-agentic-ai)
-        - [What is Agentic AI](#what-are-ai-agents)
-        - [Smart Home Scenario](#one-example-of-an-ai-agent)
-## Concepts
-### 1. LangChain
-#### What is LangChain?
+- [LangChain](#1-langchain)
+- [LangGraph](#2-langgraph)
+    - [Key Componnets](#key-components)
+    - [Fundamentals](#graph-fundamentals)
+    - [How to Build Graph](#graph-construction)
+- [Agentic AI](#3-agentic-ai)
+    - [What is Agentic AI](#what-are-ai-agents)
+    - [Smart Home Scenario](#one-example-of-an-ai-agent)
+- [The Next Generation of AI](#the-next-generation-of-ai)
+    - [RAG](#1-rag-retrieval-augmented-generation)
+- [Types of AI Agents](#types-of-ai-agents)
+    - [Simple Reflex Agents](#1-simple-reflex-agents)
+## 1. LangChain
+### What is LangChain?
 LangChain is an open-source framework that helps developers build applications powered by Large Language Models (LLMs).
 Instead of coding every piece manually, LangChain provides ready-made tools, components, and APIs to:
 
@@ -24,7 +26,7 @@ Instead of coding every piece manually, LangChain provides ready-made tools, com
 
 This makes it easier to move from “just calling an LLM” to building full, production-ready AI apps.
 
-#### ⚙️ Key Capabilities
+### ⚙️ Key Capabilities
 1. **Tailorable Prompts**:
 - You can design prompts dynamically.
 
@@ -41,19 +43,19 @@ This makes it easier to move from “just calling an LLM” to building full, pr
 4. **Versatile, Mix-and-Match Components**:
 5. **Context Management**:
 
-#### 💡 Why it Matters
+### 💡 Why it Matters
 - You need **more than just a single LLM call** (e.g., multi-step reasoning, API calls, retrieval from databases).
 - You want to integrate AI into real-world applications like chatbots, knowledge bases, assistants, or data pipelines.
 - You’re building something **scalable and reusable** instead of quick one-off scripts.
-#### 🛠️ Example Applications
+### 🛠️ Example Applications
 - **Chatbots** (customer service, Q&A)
 - **Virtual Assistants** (personalized scheduling, task management)
 - **Language Tools** (translation, summarization, rewriting)
 - Data Apps (RAG systems where the LLM retrieves info from your database or documents)
 - Sentiment/Analytics (combining LLM reasoning with ML models and dashboards)
 
-#### Key Components of LangChain
-##### components & chains
+### Key Components of LangChain
+#### components & chains
 - **definition**: “components” are small, focused pieces (models, prompts, retrievers, parsers). a chain wires them together so the output of one becomes the input of the next.
 - **when to use**: any multi-step flow (clean → prompt → LLM → parse → store).
 - **example**:
@@ -74,7 +76,7 @@ chain.invoke({"text": "LangChain lets you mix & match components to build LLM ap
 ```
 
 
-##### prompt templates
+#### prompt templates
 - **definition**: reusable, parameterized prompts that turn variables into well-structured messages (great for consistency and guardrails).
 - **when to use**: you need dynamic content (user name, retrieved docs, tone, format).
 - **example**:
@@ -90,7 +92,7 @@ msg = prompt.format_messages(role="math tutor", limit="60", question="Explain ei
 
 ```
 
-##### vector stores
+#### vector stores
 - **definition**: databases that store **embeddings** (numeric vectors) for semantic search (RAG).
 - **when to use**: you want the model to answer using your data (docs, tickets, wikis).
 - **example**:
@@ -107,11 +109,11 @@ ids = vectordb.add_texts(["LangChain composes LLM apps.", "RAG adds private know
 docs = vectordb.similarity_search("How do I add my own data?", k=1)
 
 ```
-##### example selectors
+#### example selectors
 - **definition**: automatically choose few-shot examples most similar/relevant to the user’s input (boosts accuracy).
 - **when to use**:tasks benefit from demonstrations (classification, style transfer, extraction).
 - 
-##### agents
+#### agents
 - **definition**: runtime systems that let LLMs **use tools** (web search, code, DB) and decide which tool to call next (e.g., ReAct-style reasoning). modern LangChain pairs agents with **LangGraph** for reliability, but you can still run simple tool-using chains in pure LangChain.
 - **when to use**: multi-step tasks with external actions (search → fetch → compute → answer).
 - **example**:
@@ -140,9 +142,9 @@ result = chain.invoke({"question": "What is 123 + 456?"})
 ```
 
 
-### 2. Langgraph
+## 2. Langgraph
 
-#### Key Components
+### Key Components
 1. **Graph Structure**:
 ![Graph structure](images/langgraph_graph_structure.png)
 Think of your application as a directed graph:
@@ -167,7 +169,7 @@ This setup lets you::
 - It handles **conditional routing**, meaning an agent’s output can decide which path to follow (e.g., “If tool needed → Tool Agent, else → Planner”).
 - Coordination guarantees that information exchange is seamless (no dropped messages, no out-of-sync agents).
 
-#### Graph Fundamentals
+### Graph Fundamentals
 1. **State**:
 - **definition**: a shared, evolving memory object that flows through your graph. Every node reads the current state and returns an **updated** state. LangGraph manages persistence/checkpoints so you can resume runs, branch, and inspect history.
 - **Typical contents**:
@@ -356,7 +358,7 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
     - A thread is one ongoing session/run (a conversation, a job, etc.). All snapshots for that run are stored on a single timeline.
 - You address a run by `thread_id`
     - Pass the same `thread_id` later to resume, continue, or inspect that session.
-#### Why Langgraph
+### Why Langgraph
 1. **Simplified development**
 - **What it means**: You describe what should happen (nodes + edges), and LangGraph handles how to run it (order, passing messages, resuming, retries).
 - **Why it’s simpler than hand-rolled logic**:
@@ -375,7 +377,7 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 - **Mechanisms & patterns**:
     - **Per-node checkpoints**: On crash/restart, resume from the last finished node with the saved state.
 
-#### Graph Construction
+### Graph Construction
 1. **Using the `StateGraph` class**
 - LangGraph provides the `StateGraph` class as a base for building graphs.
 - We begin by initializing a `StateGraph` using the previously defined State class. This ensures that all nodes
@@ -410,9 +412,9 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
     - an RAG retrieval agent
     - 
 
-### One example of an AI Agent
+## One example of an AI Agent
 ![Smart Home Scenario](/images/agent_workflow1.png)
-#### 1. **User** → **AI Agent**
+### 1. **User** → **AI Agent**
 - The user asks: **“Latest AI News?”**
 - This question goes into the **AI Agent** (the little robot icon on the left).
 - Inside the agent, it now has a goal:
@@ -422,11 +424,11 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
     2. Read the results
     3. Summarize them
     4. Send a concise answer back
-#### 2. **Agent → “AI News” Search Query**
+### 2. **Agent → “AI News” Search Query**
 - The grey box labeled “**AI News** 🔍” is the agent deciding what tool call/search query to make.
 - The agent converts the user question into a concrete action:
 - This is the tool-use step of the agent.
-#### 3. “AI News” Query → WWW (the web)
+### 3. “AI News” Query → WWW (the web)
 - The **WWW icon** represents the **internet / external environment**.
 - The agent (through a tool) sends the search query to the web:
     - Google/Bing/News API, etc.
@@ -436,15 +438,21 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
     - snippets
     - descriptions
 - This is the **perception** step: the agent is gathering raw information from the environment.
-#### 4. WWW → Raw News Content
+### 4. WWW → Raw News Content
 - The curved arrow from the WWW back down to the grey text box (e.g., “Tech company unveils…”)
 - represents:
     - The web returns **news articles**
+    - The agent receives one or more pieces of text, such as:
+        - “Tech company unveils new AI chip…”
+        - “Research lab releases open-source model…”
+    - So now the agent has raw data, but not yet a user-friendly answer.
+### 5. Raw News → AI Agent → “Answer”
+- The lower half of the diagram shows the **processing and summarization**:
     - 
 
-### Agentic AI
-#### What is Agentic AI
-#### 1. Task Decomposition
+## Agentic AI
+### What is Agentic AI
+### 1. Task Decomposition
 - **Meaning**:
     - Agentic AI automatically breaks a large goal into smaller, solvable subtasks.
 - **Example**:
@@ -458,7 +466,7 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
         4. Compare prices
         5. Generate itinerary
         
-#### 2. Inter-Agent Communication
+### 2. Inter-Agent Communication
 - **Meaning**:
     - Multiple agents communicate with each other—like digital coworkers in Slack.
 - **Example**
@@ -478,11 +486,122 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
         - Summarizer Agent → writes summary
         - Reflection Agent → checks mistakes
     - You can easily expand into this pattern.
-#### 3. Memory and Reflection
 
-- Agentic AI can:
+### 3. Memory and Reflection
+#### Agentic AI can:
 - **Remember past steps**:
     - (What it already tried, what worked, what failed)
 - **Reflect on its output**:
     - (“Is this correct?”, “Should I fix this?”, “Should I retry?”)
 - **Learn from mistakes**
+    - (Internal feedback loops)
+    - This turns AI from **reactive** → **self-improving**.
+    - **Example**:
+        - A trip planner agent remembers that:
+            - You prefer morning flights
+            - You dislike small hotels
+            - You have no checked luggage
+            - You always choose window seats
+        
+
+
+### Example:
+![Agentic AI Workflow](images/agentic_ai_workflow1.png)
+- **Left: “AI Agent” (simple, single-task thermostat)**
+    - On the left, we have a single AI agent that controls temperature.
+        - The bottom icon (thermometer + snowflake) = **thermostat device / agent**
+        - The arrow going up = the agent chooses a **temperature setting**
+        - The big circle “20°C” = **the chosen target temperature**
+        - “Backup power” label at the bottom just means the system stays on even if something goes wrong (simple robustness).
+
+
+## The Next Generation of AI
+![Next Revolution of AI](images/next_evalution_of_AI.png)
+### Overview: “The next evolution of AI”
+- The diagram describes three major pillars that define the modern evolution of AI:
+1. RAG (Retrieval-Augmented Generation)
+2. Agentic AI
+3. Multimodal AI
+### 1. RAG (Retrieval-Augmented Generation)
+#### What RAG adds
+- RAG connects LLMs (like GPT-4 or DeepSeek) with external knowledge sources, most commonly:
+    - Vector databases (Pinecone, Chroma, FAISS)
+    - Search engines (Tavily, Google, Bing)
+    - Company documents
+    - Internal databases
+#### Benefits shown in the diagram
+
+### 2. Agentic AI
+- This is the lower-left section of the circular diagram.
+- Agentic AI gives the model the ability to:
+#### Autonomously execute tasks
+- Instead of just answering prompts, agentic AI systems:
+    - Take actions
+    - Use tools
+    - Call APIs
+    - Search the web
+    - Write files
+    - Analyze data
+    - Make decisions
+    - Iterate on results
+
+
+### 3. Multimodal AI
+- This is the right side of the diagram.
+- Multimodal models can process more than one type of data, such as:
+    - Text
+    - Images
+    - Audio
+    - Video
+    - Code
+    - Sensor data
+#### Processes diverse data types
+- This enables:
+    - Image analysis
+    - Vision + language reasoning
+    - Audio transcription + meaning extraction
+    - Video summarization
+#### Allows for more interactive user experiences
+- Examples:
+    - “Analyze this screenshot and describe the bug.”
+    - “Convert this image into HTML/CSS code.”
+    - “Transcribe this audio and summarize key points.”
+- Multimodal AI lets users interact naturally, just like humans do.
+
+### 4. “Work independently or combine to build powerful AI systems”
+- This section at the bottom explains that these components can work separately but become powerful when combined:
+- Independent examples:
+    - RAG alone → Chatbot with document memory
+    - Agent alone → Automation (no external documents)
+    - Multimodal alone → Vision model
+
+### Putting it all together — meaning of the full diagram
+- RAG → gives AI memory + factual grounding
+- Agentic AI → gives AI autonomy
+- Multimodal → gives AI richer perception
+
+## Types of AI Agents
+### 1. Simple reflex agents
+- A simple reflex agent is the most basic and primitive form of AI agent.
+- It behaves like a direct mapping from input → action, with no thinking, memory, or learning.
+#### 1. A simple reflex agent is the most basic type of AI agent, designed to operate based on direct responses to environmental conditions.
+- **What this means**:
+    - It reacts **directly** to what it senses at the current moment.
+    - It does not look at:
+        - previous decisions
+        - history
+        - context
+        - long-term consequences
+- **Its core mechanism is:**
+```scss
+IF (condition) → THEN (action)
+
+```
+- These are called **condition–action rules**.
+
+#### Workflow of Simple Reflex Agents
+![Simple Reflex Agents Workflow](images/simple_reflex_workflow.png)
+1. **Environment (Right Side)**
+- This is the external world where changes happen — for example:
+    - Temperature in a room
+    - 
