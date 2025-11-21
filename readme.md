@@ -12,6 +12,7 @@
     - [RAG](#1-rag-retrieval-augmented-generation)
 - [Types of AI Agents](#types-of-ai-agents)
     - [Simple Reflex Agents](#1-simple-reflex-agents)
+- [Multi-Agents](#6-multi-agents)
 ## 1. LangChain
 ### What is LangChain?
 LangChain is an open-source framework that helps developers build applications powered by Large Language Models (LLMs).
@@ -514,8 +515,17 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
         - The big circle “20°C” = **the chosen target temperature**
         - “Backup power” label at the bottom just means the system stays on even if something goes wrong (simple robustness).
 
+### Comparision between AI Agent and Agentic AI
+| **Feature**          | **AI Agent**                                     | **Agentic AI**                                                        |
+|----------------------|--------------------------------------------------|-------------------------------------------------------------------|
+| **Design**           | One agent, one task                              | Multiple agents with distinct roles                               |
+| **Communication**    | No coordination with others                      | Constant communication and coordination                           |
+| **Memory**           | Stateless or minimal history                     | Persistent memory of tasks, outcomes, and strategies              |
+| **Reasoning**        | Linear logic (do step A → B)                     | Iterative planning and re-planning with advanced reasoning        |
+| **Scalability**      | Limited to task size                             | Can scale to handle multi-agent, multi-stage problems             |
+|**Typical Applications**| Chatbots, virtual assistants, workflow helpers   | Supply chain coordination, enterprise optimization, team leaders  |
 
-## The Next Generation of AI
+## 4. The Next Generation of AI
 ![Next Revolution of AI](images/next_evalution_of_AI.png)
 ### Overview: “The next evolution of AI”
 - The diagram describes three major pillars that define the modern evolution of AI:
@@ -670,3 +680,87 @@ IF (condition) → THEN (action)
 1. What the world is like now (current perception)
 2. How the world evolves (transition model)
 3. What my actions do (action model)
+
+
+## 6. Multi-Agents
+### What are Multi Agent Systems
+![Multi-Agent Overview](images/multi_agent_overview.png)
+#### The core idea
+##### Organize agents into specialized, collaborative teams
+- Instead of having one single AI agent trying to do everything, tasks are **split across multiple agents**, each with its own specialization.
+- Think of it like having a team:
+    - A researcher agent
+    - A planner agent
+    - 
+- They collaborate just like real human team members.
+
+#### Multi-Agent System (Right Side)
+##### Consists of multiple autonomous agents
+- A MAS is made of several independent agents, each capable of:
+    - Understanding instructions
+    - Making decisions
+    - Taking actions
+    - Communicating results
+- These agents are not “dumb workers.” They are **autonomous modules**.
+##### Interacts within an environment to achieve goals
+- Agents work inside a shared environment such as:
+    - your codebase
+    - the internet
+    - a simulation
+    - a workflow or pipeline
+- They exchange information and coordinate to achieve the **final goal**.
+
+### Team of Chiefs
+#### 1. Each specializes in a different dish
+- Just like real kitchens:
+    - One chef specializes in desserts
+    - Another specializes in meat
+    - Another in sauces
+    - Another in plating
+- AI equivalent:
+- In a multi-agent AI system:
+    - A **Web Search Agent** specializes in finding information
+    - A **Summarization Agent** specializes in compressing text
+    - A **Reasoning Agent** specializes in logic
+    - A **Coding Agent** specializes in writing code
+    - A **Reflect Agent** specializes in reviewing and improving outputs
+#### 2. Take on tasks too complex for a single chef
+- Some meals are simply **too big or too complex** for one chef:
+    - Full-course meals
+    - High-volume restaurant service
+    - Multi-component dishes
+- A single person would:
+    - be slow
+    - 
+#### 3. Collaborating to prepare a complete meal
+- Although each chef has a separate specialty, they work together to produce a full meal:
+
+### Core Components of Multi Agent
+![Core Components of Multi Agent](images/core_components_of_multi_agent.png)
+#### Overview: Multi-Agent Systems = Puzzle Pieces Working Together
+- The image shows puzzle pieces being assembled.
+- This symbolizes how agents, environment, and communication each act like a puzzle piece.
+- 
+#### 1. Agents — Autonomous Units with Goals & Capabilities
+- Agents are the individual “workers” inside the system.
+- Each agent has:
+    - **Autonomy**
+        - It can make decisions by itself without a human controlling every step.
+    - **Capabilities**
+    - **Goals**
+        - Every agent is assigned a purpose:
+            - A Search Agent → find information
+            - A Reasoning Agent → solve a logic step
+            - A Reflect Agent → evaluate and refine output
+            - A Coding Agent → write or fix code
+        - In your project, each "Reflect Agent" or "News Agent" is one of these units.
+
+#### 2. Environment — The Context Where Agents Operate
+- Agents cannot function in a vacuum — they need a **world** to interact with.
+- The "environment" includes:
+    - the task instructions
+    - the available tools (e.g., code execution, web search)
+    - external APIs
+    - the data they work on
+    - the shared memory or state
+    - 
