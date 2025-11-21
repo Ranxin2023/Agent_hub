@@ -714,7 +714,33 @@ IF (condition) → THEN (action)
     - **Prediction module**
 - This module simulates different **possible actions** and predicts their outcomes.
 - This enables **planning**.
-- 
+- **Examples**:
+    - If robot turns left → will avoid obstacle
+    - If robot goes forward → may hit a wall
+    - If agent chooses path X → will get closer to the goal
+    - 
+5. **Goals (Purple Box)**
+- This is the key addition.
+- The agent has a **goal** that describes a desired future state.
+- Examples:
+    - Reach room B103
+    - Deliver package
+    - Maximize battery life
+- The agent evaluates predicted outcomes **relative to the goal**.
+- This allows:
+    - Reasoning
+    - Evaluation of choices
+    - Planning
+    - Strategizing
+
+6. **“What action I should do now”**
+- This is where **evaluation and decision-making** happen.
+- It takes two main inputs:
+    - **Input 1: Goals**
+        - What the agent wants to achieve
+    - **Input 2: “What will it be like if I do action A?”**
+        - Predicted outcomes of different possible actions
+
 ## 6. Multi-Agents
 ### What are Multi Agent Systems
 ![Multi-Agent Overview](images/multi_agent_overview.png)
@@ -843,6 +869,7 @@ IF (condition) → THEN (action)
     - What agents can see
     - What they can act on
     - How they influence each other
+
 #### 3. Communication Protocols — How Agents Share Information
 - Communication protocols define **how agents talk to each other**.
 - Without communication:
@@ -873,5 +900,62 @@ IF (condition) → THEN (action)
     - critical evaluation mode
     - editing mode
 - This overload reduces accuracy and quality.
+##### Workflow Breakdown (Step-by-Step)
+1. **Research Agent**
+- **Responsibilities**:
+    - Gather data on market trends
+    - Look up competitors
+    - Retrieve recent news
+    - Gather data from APIs, databases, and online sources
+- Why this matters:
+    - Market research depends heavily on **accurate data**.
+    - A Research Agent focuses entirely on information retrieval without worrying about writing or analysis.
 
-#### 
+2. **Data Analysis Agent**
+- Responsibilities:
+    - Interpret numerical data
+    - Detect growth patterns
+    - Identify anomalies
+    - Summarize statistical findings
+- Why this matters:
+    - Understanding metrics (e.g., revenue growth, market share, pricing changes) requires a different cognitive mode than writing prose or collecting data.
+- A Data Analysis Agent is optimized for:
+    - quantitative reasoning
+    - trend extraction
+
+#### Example 2: Customer Support Automation
+##### Overview: Why Multi-Agent Customer Support Works
+- Customer support is not a single-step task.
+- A good support response requires:
+1. Understanding what the customer is asking
+2. Retrieving the correct information
+3. Generating a clear, personalized reply
+4. Knowing when to escalate to a human
+
+##### Workflow Breakdown
+1. Intent Detection Agent
+- **What it does**:
+    - This agent’s job is to **classify the user’s request** into categories such as:
+        - billing
+        - technical support
+        - general inquiry
+        - refund request
+        - password reset
+        - 
+- **Why it matters**:
+    - Correctly detecting the intent determines the **entire response pipeline**.
+2. Knowledge Retrieval Agent
+- **What it does**:
+    - Once intent is known, this agent finds the best possible information by retrieving:
+        - FAQ entries
+        - help center documents
+        - past ticket histories
+        - knowledge base articles
+        - product manuals
+- **Why it matters**:
+    - This ensures the system responds with **real**, **factual**, **up-to-date** answers instead of hallucinations.
+- **Why a separate agent?**
+    - Searching databases and retrieving exact chunks requires:
+        - precision
+        - selective focus
+        - 
