@@ -1,5 +1,7 @@
 # AgentHub
 ## Table Of Contents
+- [The Next Generation of AI](#the-next-generation-of-ai)
+    - [RAG](#1-rag-retrieval-augmented-generation)
 - [LangChain](#1-langchain)
 - [LangGraph](#2-langgraph)
     - [Key Componnets](#key-components)
@@ -8,10 +10,11 @@
 - [Agentic AI](#3-agentic-ai)
     - [What is Agentic AI](#what-are-ai-agents)
     - [Smart Home Scenario](#one-example-of-an-ai-agent)
-- [The Next Generation of AI](#the-next-generation-of-ai)
-    - [RAG](#1-rag-retrieval-augmented-generation)
+    - [Comparison between AI Agent and Agentic AI](#comparision-between-ai-agent-and-agentic-ai)
 - [Types of AI Agents](#types-of-ai-agents)
     - [Simple Reflex Agents](#1-simple-reflex-agents)
+    - [Model Based Reflex Agents](#2-model-based-reflex-agents)
+    - [Goal Based Agents](#3-goal-based-agents)
 - [Multi-Agents](#6-multi-agents)
 ## 1. LangChain
 ### What is LangChain?
@@ -590,7 +593,7 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 - Agentic AI → gives AI autonomy
 - Multimodal → gives AI richer perception
 
-## Types of AI Agents
+## 5. Types of AI Agents
 ### 1. Simple reflex agents
 - A simple reflex agent is the most basic and primitive form of AI agent.
 - It behaves like a direct mapping from input → action, with no thinking, memory, or learning.
@@ -636,7 +639,17 @@ IF (condition) → THEN (action)
 ### 2. Model-based reflex agents
 #### What Is a Model-Based Reflex Agent? (Big Picture)
 - A model-based reflex agent is the next step up from a simple reflex agent.
-- 
+- A simple reflex agent:
+    - Only reacts to the current input
+    - Has no memory
+    - Cannot understand changes over time
+- A **model-based reflex agent** adds one critical improvement:
+    - It maintains an internal model (memory) of how the world changes.
+- This allows the agent to:
+    - Track what happened earlier
+    - Infer hidden information
+    - Make smarter decisions
+    - Handle partially observable environments
 
 #### Workflow
 ![Model Based Reflex Workflow](images/Model_based_reflex_workflow.png)
@@ -681,7 +694,27 @@ IF (condition) → THEN (action)
 2. How the world evolves (transition model)
 3. What my actions do (action model)
 
+### 3. Goal-Based Agents
+#### What Is a Goal-Based Agent?
+- A goal-based agent is an AI agent that:
+    - does not just react
+    - does not only follow rules
+    - does not only use memory
+- Instead, it acts according to a **goal** — a desired future state.
+- A goal tells the agent:
+    - “What am I trying to achieve?”
+    - “What destination/state do I want to reach?”
+- 
 
+#### Workflow of Goal-Based Agents
+![Goal Based Workflow](images/goal_based_agent_workflow.png)
+4. **The New Component: “What will it be like if I do action A”**
+- This part is brand new (not present in simple or model-based agents).
+- It represents:
+    - **Prediction module**
+- This module simulates different **possible actions** and predicts their outcomes.
+- This enables **planning**.
+- 
 ## 6. Multi-Agents
 ### What are Multi Agent Systems
 ![Multi-Agent Overview](images/multi_agent_overview.png)
@@ -735,6 +768,48 @@ IF (condition) → THEN (action)
 #### 3. Collaborating to prepare a complete meal
 - Although each chef has a separate specialty, they work together to produce a full meal:
 
+### Why do we use Multi-Agents?
+
+#### Challenges of a Single LLM Agent
+1. **Context Overload**
+- A single agent juggling retrieval, reasoning, analysis, writing, AND critique can lose track of details.
+- LLMs are good, but they have limits:
+    - Token limits
+    - Short-term memory only
+    - Need explicit instructions to “stay focused”
+- When one LLM must:
+    - 
+    - all inside one run → it gets overloaded.
+2. **Role Confusion**
+- Switching between cognitive modes causes inconsistent output quality.
+- An LLM that must switch between:
+    - creative writing mode
+    - strict logical reasoning mode
+    - critical evaluation mode
+    - code execution mode
+3. **Debugging Difficulty**
+- Hard to identify which step caused an error when all logic is inside one model.
+- If a single agent:
+    - reasons
+    - retrieves
+    - processes
+    - produces output
+- …in one step, you cannot see **where** the mistake occurred.
+- Reasoning Agent → deduce logic
+4. **Quality Dilution**
+- One LLM becomes “okay” at everything but not excellent at anything.
+
+### How Multi-Agent LLM Systems Help
+#### 1. Clear responsibilities per subtasks
+- Each agent has **one job**:
+    - Search Agent → retrieve data
+    - Reasoning Agent → deduce logic
+    - Critic Agent → check errors
+    - Coding Agent → generate code
+    - Planning Agent → create task plan
+    - Reflect Agent → improve output
+#### 2. Targeted prompt engineering per agent
+- 
 ### Core Components of Multi Agent
 ![Core Components of Multi Agent](images/core_components_of_multi_agent.png)
 #### Overview: Multi-Agent Systems = Puzzle Pieces Working Together
@@ -764,3 +839,39 @@ IF (condition) → THEN (action)
     - the data they work on
     - the shared memory or state
     - 
+- In a multi-agent system, the environment defines:
+    - What agents can see
+    - What they can act on
+    - How they influence each other
+#### 3. Communication Protocols — How Agents Share Information
+- Communication protocols define **how agents talk to each other**.
+- Without communication:
+    - Agents become isolated
+    - Tasks can’t be coordinated
+    - No final result can be assembled
+- Protocols include rules such as:
+    - message format
+    - how to request help from another agent
+    - how to pass results
+    - how to resolve conflicts
+    - how to coordinate steps
+- In modern multi-agent AI, communication can look like:
+    - JSON messages
+    - LangGraph nodes passing state
+    - a message queue
+    - an orchestration framework (like LangChain)
+    - tool calls and responses
+
+
+### Example of Multi-Agent
+#### Example 1: Automated Market Research Report 
+- A market research report is a **complex**, **multi-step** task involving data collection, analysis, writing, reviewing, and editing.
+- A single LLM can generate such a report, but the quality will be inconsistent because it must switch between:
+    - research mode
+    - analysis mode
+    - writing mode
+    - critical evaluation mode
+    - editing mode
+- This overload reduces accuracy and quality.
+
+#### 
