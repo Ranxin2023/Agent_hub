@@ -104,3 +104,20 @@ def event_loop(state):
 - Meaning:
     - After every revision, the model decides whether to stop
     - 
+
+
+## Workflow Explanation
+![Reflection Agent Workflow](../../images/reflection_agent_workflow.png)
+### STEP 1 — User Query
+- The user sends a question, such as:
+    - “Give me fashion advice about wearing fedoras.”
+- This query enters the agent system and is fed to the LLM for the first time.
+- The diagram shows an arrow from **User** → **LLM**.
+### STEP 2 - LLM Generates the First Response
+- The LLM produces an initial answer.
+- This answer is raw, unrefined, and may:
+    - Miss details
+    - Contain incorrect assumptions
+    - Be too generic
+    - Include stereotypes or unsafe framing
+- 
