@@ -16,11 +16,18 @@
     - [Simple Reflex Agents](#1-simple-reflex-agents)
     - [Model Based Reflex Agents](#2-model-based-reflex-agents)
     - [Goal Based Agents](#3-goal-based-agents)
+    - [Utility Based Agents](#4-utility-based-agents)
 - [Multi-Agents](#6-multi-agents)
+    - [What are Multi-Agent Systems](#what-are-multi-agent-systems)
+    - [Example of Multi-Agent](#example-of-multi-agent)
 - [Build Multi Agent](#7-build-multi-agent)
     - [Why Multi Agent Systems](#why-multi-agent-systems)
     - [Communication Protocols](#communication-protocols)
     - [Framework Supporting Multi Agent LLM systems](#frameworks-supporting-multi-agent-llm-systems)
+        - [Langgraph](#1-langgraph)
+        - [Autogen](#2-autogen)
+        - [Crew AI](#3-crewai)
+        - [BeeAI](#4-beeai)
 ## 1. LangChain
 ### What is LangChain?
 LangChain is an open-source framework that helps developers build applications powered by Large Language Models (LLMs).
@@ -1086,19 +1093,73 @@ IF (condition) → THEN (action)
 
 ### Communication Protocols
 #### 1. Model Context Protocol (MCP)
-- **What it is**
-    - MCP is a **JSON-RPC–based protocol** that allows LLMs to interact with external tools, services, and data sources.
-    - It is created by **Anthropic** and used widely across agent ecosystems.
-- **Why it exists**:
-    - LLMs need safe and structured ways to call:
-        - tools
-        - APIs
-        - databases
-        - external systems
-        - file systems
-        - computation services
-        - custom plugins
-    - MCP gives a **universal standard** so an LLM can invoke tools in a predictable way instead of relying on ad-hoc prompts.
+##### **What it is**
+- MCP is a **JSON-RPC–based protocol** that allows LLMs to interact with external tools, services, and data sources.
+- It is created by **Anthropic** and used widely across agent ecosystems.
+##### **Why it exists**:
+- LLMs need safe and structured ways to call:
+    - tools
+    - APIs
+    - databases
+    - external systems
+    - file systems
+    - computation services
+    - custom plugins
+- MCP gives a **universal standard** so an LLM can invoke tools in a predictable way instead of relying on ad-hoc prompts.
+##### **How MCP works**
+- The agent sends a **JSON-RPC request** describing an action.
+- A tool host receives the request.
+- The host performs the action.
+- The result is returned to the agent.
+- Example conceptually:
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "run_tool",
+  "params": {
+    "tool": "weather_api",
+    "location": "San Francisco"
+  },
+  "id": 1
+}
+
+```
+- The tool replies:
+```json
+{
+  "jsonrpc": "2.0",
+  "result": { "temperature": "18°C" },
+  "id": 1
+}
+
+```
+- **Key Benefits**
+    - Modular
+        - Tools can be swapped in/out without changing the agent.
+    - Real-time collaboration
+        - LLMs can call tools during reasoning, not just at the end.
+    - Safe
+        - Tools execute only predefined operations (e.g., search, fetch, compute).
+    - Better than prompt-hacking
+        - Instead of saying:
+            - “Assume you are a calculator. Please compute…”
+        - The agent **calls an actual calculator tool** via MCP.
+- **Where MCP is used**
+    - Anthropic Claude tools
+    - Multi-agent systems needing tool access
+    - Agent-based IDEs (cursor, windsor.ai, etc.)
+    - Automations requiring external API calls
+    - RAG pipelines connecting LLMs to storage & search tools
+
+#### 2. IBM Agent Communication Protocol (ACP)
+##### What it is
+- ACP is IBM’s enterprise protocol for **standardized message exchange among autonomous agents**.
+- It is designed specifically for:
+    - enterprise-scale agent systems
+    - secure communication
+    - structured message passing
+    - long-running workflows
+    
 ### Frameworks Supporting Multi-Agent LLM Systems
 #### 1. LangGraph
 - **Focus/Features**
