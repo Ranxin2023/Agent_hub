@@ -17,6 +17,10 @@
     - [Model Based Reflex Agents](#2-model-based-reflex-agents)
     - [Goal Based Agents](#3-goal-based-agents)
 - [Multi-Agents](#6-multi-agents)
+- [Build Multi Agent](#7-build-multi-agent)
+    - [Why Multi Agent Systems](#why-multi-agent-systems)
+    - [Communication Protocols](#communication-protocols)
+    - [Framework Supporting Multi Agent LLM systems](#frameworks-supporting-multi-agent-llm-systems)
 ## 1. LangChain
 ### What is LangChain?
 LangChain is an open-source framework that helps developers build applications powered by Large Language Models (LLMs).
@@ -766,6 +770,31 @@ IF (condition) → THEN (action)
     - The agent simulates multiple possible actions
     - Predicts the future world for each action
     - Uses internal models to estimate outcomes
+5. **"How happy I will be in such a state" — The Utility Function**
+- This is the **KEY new part** in utility-based agents.
+- The UTLITY FUNCTION measures:
+    - **“How good is this future state for me?”**
+- It assigns numerical happiness values to predicted future worlds.
+- Examples of utility evaluation:
+    - Safety = high utility
+    - Collision risk = low utility
+6. **“What action I should do now” — Decision Module**
+- This module:
+    - Looks at predicted outcomes
+    - Looks at their utility scores
+    - Selects the action with the **highest utility**
+- This is the core of the utility-based decision-making.
+- It chooses:
+    - the **best** action
+    - the **most beneficial**
+7. **Actuators → Action → Environment**
+- Finally:
+    - The best action is executed using actuators
+    - It affects the environment
+    - Sensors detect new environment state
+    - The cycle repeats
+- This forms an **optimization feedback loop**.
+
 ## 6. Multi-Agents
 ### What are Multi Agent Systems
 ![Multi-Agent Overview](images/multi_agent_overview.png)
@@ -987,7 +1016,7 @@ IF (condition) → THEN (action)
 
 
 ## 7. Build Multi-Agent
-### Why Multi-Agent Systems? — Full Detailed Explanation
+### Why Multi-Agent Systems? 
 ### Typical Multi-Agent Communication Patterns
 #### 1. Sequential (Pipeline)
 - **Definition**:
@@ -1052,3 +1081,50 @@ IF (condition) → THEN (action)
     - Emergent reasoning
     - Error correction
     - Collaborative decision-making
+- **Example**:
+    - Requirements agent queries data agent before finalizing
+
+### Communication Protocols
+#### 1. Model Context Protocol (MCP)
+- **What it is**
+    - MCP is a **JSON-RPC–based protocol** that allows LLMs to interact with external tools, services, and data sources.
+    - It is created by **Anthropic** and used widely across agent ecosystems.
+- **Why it exists**:
+    - LLMs need safe and structured ways to call:
+        - tools
+        - APIs
+        - databases
+        - external systems
+        - file systems
+        - computation services
+        - custom plugins
+    - MCP gives a **universal standard** so an LLM can invoke tools in a predictable way instead of relying on ad-hoc prompts.
+### Frameworks Supporting Multi-Agent LLM Systems
+#### 1. LangGraph
+- **Focus/Features**
+    - Graph-based orchestration, shared state, dynamic routing
+- **What this means**
+    - LangGraph (by LangChain) is currently the most popular framework for building multi-agent and agentic RAG systems.
+    - It treats agents as **nodes in a graph**, and data (state) flows between nodes.
+- **Key advantages**
+1. Graph-based orchestration
+2. Shared State
+3. Dynamic Routing
+- Ideal for:
+    - Agentic RAG
+    - Multi-step reasoning
+    - Complex workflows
+    - Production-level pipelines (chatbots, assistants)
+#### 2. AutoGen
+- Focus/Features
+    - Agent self-organization, negotiation, adaptive collaboration
+    - AutoGen (by Microsoft) is built around **conversation-driven agent collaboration**.
+#### 3. CrewAI
+#### 4. BeeAI
+#### Summary Table
+| **Framework** | **Strength**                        | **Best For**                             |
+| ------------- | ----------------------------------- | ---------------------------------------- |
+| **LangGraph** | Graph workflows + shared state      | RAG pipelines, agent orchestration       |
+| **AutoGen**   | Negotiation + conversation loops    | Collaborative reasoning, code generation |
+| **CrewAI**    | Typed interfaces + strict workflows | Enterprise apps, reliable data pipelines |
+| **BeeAI**     | Enterprise orchestration + IBM ACP  | Large-scale corporate AI deployments     |
