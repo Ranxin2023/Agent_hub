@@ -7,11 +7,12 @@
     - [Key Componnets](#key-components)
     - [Fundamentals](#graph-fundamentals)
     - [How to Build Graph](#graph-construction)
+- [Langgraph Typical Functions](#2extra-typical-langgraph-functions)
 - [Agentic AI](#3-agentic-ai)
     - [What is Agentic AI](#what-are-ai-agents)
     - [Smart Home Scenario](#one-example-of-an-ai-agent)
     - [Comparison between AI Agent and Agentic AI](#comparision-between-ai-agent-and-agentic-ai)
-- [Types of AI Agents](#types-of-ai-agents)
+- [Types of AI Agents](#5-types-of-ai-agents)
     - [Simple Reflex Agents](#1-simple-reflex-agents)
     - [Model Based Reflex Agents](#2-model-based-reflex-agents)
     - [Goal Based Agents](#3-goal-based-agents)
@@ -395,6 +396,7 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 - Once nodes and edges are added, we **compile** the graph.
 - Compiling performs a **basic structure check** to ensure the workflow is valid before execution.
 
+## 2Extra. Typical Langgraph Functions
 ## 3. Agentic AI
 ### Defining the Spectrum: From AI Agents to Agentic AI
 #### What are AI Agents?
@@ -741,6 +743,29 @@ IF (condition) → THEN (action)
     - **Input 2: “What will it be like if I do action A?”**
         - Predicted outcomes of different possible actions
 
+### 4. Utility-Based Agents
+#### What Is a Utility-Based Agent?
+- A **utility-based agent** goes beyond simply completing a goal.
+- It chooses the **best** possible action by evaluating how beneficial each outcome is.
+- Instead of:
+    - “Does this action achieve my goal?”
+- It asks:
+    - “How **good** is this action compared to others?”
+    - “How **good**“Which action gives me the **highest benefit**?” is this action compared to others?”
+    - “Which choice yields the **best trade-off**?”
+- It uses something called a **utility function**.
+
+#### Workflow
+![Utility Based Agent Workflow](images/utility_based_agent_workflow.png)
+1. **Environment → Sensors → Precepts**
+- Same as previous diagrams:
+2. **Internal Model (left blue blocks)**
+4. **“What it will be like if I do action A”**
+- Here is where **utility-based agents truly differ**.
+- This block performs **future simulation**:
+    - The agent simulates multiple possible actions
+    - Predicts the future world for each action
+    - Uses internal models to estimate outcomes
 ## 6. Multi-Agents
 ### What are Multi Agent Systems
 ![Multi-Agent Overview](images/multi_agent_overview.png)
@@ -959,3 +984,71 @@ IF (condition) → THEN (action)
         - precision
         - selective focus
         - 
+
+
+## 7. Build Multi-Agent
+### Why Multi-Agent Systems? — Full Detailed Explanation
+### Typical Multi-Agent Communication Patterns
+#### 1. Sequential (Pipeline)
+- **Definition**:
+    - Agents work **one after another**, passing their output as the input to the next agent.
+    - This is like an assembly line:
+        - Agent A → Agent B → Agent C → Agent D
+- **How It Works**:
+    - Each agent specializes in **one stage** of the task.
+    - An agent cannot begin until the previous agent finishes.
+    - The flow is linear and predictable.
+- **Why use it?**
+    - Clear order of execution
+    - Easy to trace and debug
+    - Ideal for processes with well-defined stages
+- **Example from the cheat sheet**
+    - Research → Analysis → Writing → Review
+    - A typical AI document pipeline:
+    1. Research Agent
+        - Collects facts or relevant context.
+    2. Analysis Agent
+        - Interprets or transforms what research found.
+    3. Writing Agent
+        - Produces the draft using the analysis.
+    4. Review Agent
+        - Edits, verifies quality, improves coherence.
+- **Best For**:
+    - document pipelines, data processing pipelines, multi-step reasoning tasks.
+    
+#### 2. Parallel with Aggregation
+- **Definition**
+    - Multiple agents **run at the same time**, and their outputs are **merged or aggregated**.
+    - This looks like:
+        Agent A —┐
+        Agent B ——> Aggregator agent → Final output
+        Agent C —┘
+- **How it works**
+    - Agents do **independent subtasks** simultaneously.
+    - The system collects their outputs into a unified answer.
+    - This massively reduces time when subtasks don’t depend on each other.
+- **Why use it?**
+    - Speed
+    - Redundancy
+    - Multiple perspectives
+- **Examples**:
+    - SEO analysis, fact-checking, writing run in parallel
+    - **SEO Agent** → extracts keywords
+    - **Fact-check Agent** → verifies claims
+    - **Writing Agent** → drafts paragraphs
+    - Then, **Aggregator Agent** merges all contributions into one final document.
+#### 3. Interactive Dialogue
+- **Definition**
+    - Agents **talk to each other** iteratively, exchanging messages to clarify, negotiate, or improve the result.
+    - This is similar to:
+        - Agent A ↔ Agent B ↔ Agent C
+        - (repeating until a consensus is reached)
+
+- **How It Works**:
+    - Agents ask questions or challenge each other’s outputs.
+    - Useful when tasks are ambiguous or require refinement.
+    - Produces more accurate or creative answers.
+- **Why Use It**:
+    - Emergent reasoning
+    - Error correction
+    - Collaborative decision-making
