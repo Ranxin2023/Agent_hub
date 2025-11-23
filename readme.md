@@ -20,7 +20,8 @@
 - [Multi-Agents](#6-multi-agents)
     - [What are Multi-Agent Systems](#what-are-multi-agent-systems)
     - [Example of Multi-Agent](#example-of-multi-agent)
-- [Build Multi Agent](#7-build-multi-agent)
+- [Summary of Multi Agents]()
+- [Build Multi Agent](#8-build-multi-agent)
     - [Why Multi Agent Systems](#why-multi-agent-systems)
     - [Communication Protocols](#communication-protocols)
     - [Framework Supporting Multi Agent LLM systems](#frameworks-supporting-multi-agent-llm-systems)
@@ -1021,8 +1022,26 @@ IF (condition) → THEN (action)
         - selective focus
         - 
 
-
-## 7. Build Multi-Agent
+## 7. Summary of Multi-Agent
+### 1. Multi-agent systems = Organized specialization
+- The first bullet emphasizes the core idea:
+    - **Multi-agent systems are fundamentally about putting the right agent on the right task.**
+- Instead of one giant model doing everything, we break work into smaller tasks handled by specialized agents.
+- A multi-agent system is:
+    - **Multiple autonomous agents**
+    - Each with **specific abilities**
+### 2. Agent Specialization Concepts
+- This part explains **how agents are designed to be different from each other**.
+#### a. Capability boundaries
+- Each agent must have a **clear, well-defined role**.
+- Example:
+    - A search agent only finds relevant sources
+    - A summary agent only summarizes
+    - A planner agent only breaks tasks into steps
+- This prevents confusion or overlaps.
+#### b. Expertise depth and breadth
+- This is about balancing:
+## 8. Build Multi-Agent
 ### Why Multi-Agent Systems? 
 ### Typical Multi-Agent Communication Patterns
 #### 1. Sequential (Pipeline)
