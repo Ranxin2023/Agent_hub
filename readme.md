@@ -17,13 +17,21 @@
     - [Model Based Reflex Agents](#2-model-based-reflex-agents)
     - [Goal Based Agents](#3-goal-based-agents)
     - [Utility Based Agents](#4-utility-based-agents)
-- [Multi-Agents](#6-multi-agents)
+- [Summary of Types of AI Agents](#6-summary-of-types-of-ai-agents)
+    - [Reflection Agents and Feedback Loop](#reflection-agents-and-feedback-loop)
+    - [Prompt Engineering+LangChain/Langgraph](#prompt-engineering--langchainlanggraph)
+    - [Graph Construction / LangGraph Node Design](#graph-construction--langgraph-node-design)
+- [Multi-Agents](#7-multi-agents)
     - [What are Multi-Agent Systems](#what-are-multi-agent-systems)
     - [Example of Multi-Agent](#example-of-multi-agent)
-- [Summary of Multi Agents]()
-- [Build Multi Agent](#8-build-multi-agent)
+    - [Why Do We Use Multi-Agents](#why-do-we-use-multi-agents)
+    - [Core Components of Multi-Agent](#core-components-of-multi-agent)
+    - [Reflection Agent Behavior](#reflection-agent-behavior)
+- [Summary of Multi Agents](#8-summary-of-multi-agent)
+- [Build Multi Agent](#9-build-multi-agent)
     - [Why Multi Agent Systems](#why-multi-agent-systems)
     - [Communication Protocols](#communication-protocols)
+        - [MCP](#1-model-context-protocol-mcp)
     - [Framework Supporting Multi Agent LLM systems](#frameworks-supporting-multi-agent-llm-systems)
         - [Langgraph](#1-langgraph)
         - [Autogen](#2-autogen)
@@ -803,7 +811,68 @@ IF (condition) → THEN (action)
     - The cycle repeats
 - This forms an **optimization feedback loop**.
 
-## 6. Multi-Agents
+## 6. Summary of Types of AI Agents
+### Reflection Agents and Feedback Loop
+#### Reflection agents iteratively improve AI outputs by critically analyzing their performance through a feedback loop
+- Reflection agents don’t just generate answers.
+- They analyze what they produced, detect flaws, and improve the answer.
+- This loop looks like:
+1. **Generator**: Creates an answer
+2. **Reflector**: Reviews the answer
+3. **Revises**: Fixes mistakes, clarifies, cites sources, etc.
+- This is the fundamental principle of self-correcting AI.
+#### The generator produces content while the reflector provides critical feedback
+- The two roles of the agent:
+    - **Generator** = Writes first draft
+    - **Reflector** = Critiques and finds weaknesses
+
+### Prompt Engineering + LangChain/LangGraph
+#### Prompt Engineering with LangChain guides LLMs in content generation and structured reflection using dynamic ChatPromptTemplates and message placeholders
+- LangChain lets you create:
+    - Reusable templates
+    - Sections for reflection
+    - Slots for dynamic messages
+- This structure enforces consistent behavior across steps.
+#### Agent state in LangGraph is defined using MessageGraph. It tracks conversation, accumulating messages and context across iterations
+- LangGraph uses **state**, which acts like memory between steps.
+- The MessageGraph stores:
+    - The generator's output
+    - The reflector's critique
+    - Tool results
+    - Revised answers
+- Each iteration accumulates context.
+
+### Graph Construction / LangGraph Node Design
+### Reflection Agent Behavior
+#### Reflexion agents build on reflection agents by iteratively improving responses using self-critiques, external tools, and citations
+- "Reflexion" = Reflection + Search Tools + Evidence
+- It improves answers using:
+    - Self-critique
+    - External information (like Tavily)
+    - Grounded citations
+- This makes the responses **more accurate and fact-based**.
+#### The reflection process involves a loop of generation, critique, and revision to enhance clarity, accuracy, and usefulness
+- This describes the core cycle:
+1. Generate
+2. Critique
+3. Improve
+4. Repeat until good enough
+
+#### Reflexion agents can identify and fix their own weaknesses, improving with each cycle by analyzing prior outputs
+- The agent actually **detects its own mistakes**, such as:
+    - Missing reasoning
+    - Wrong facts
+    - Logical gaps
+    - Off-topic sections
+- It uses this to self-correct.
+#### They can incorporate real-time data by calling external tools such as web search APIs, enhancing the relevance of responses
+- Reflection agents are not limited to LLM memory.
+- Examples:
+    - Search news (Tavily, NewsAPI)
+    - Query databases
+    - Fetch weather or stock info
+- This ensures **up-to-date answers**.
+## 7. Multi-Agents
 ### What are Multi Agent Systems
 ![Multi-Agent Overview](images/multi_agent_overview.png)
 #### The core idea
@@ -1022,7 +1091,7 @@ IF (condition) → THEN (action)
         - selective focus
         - 
 
-## 7. Summary of Multi-Agent
+## 8. Summary of Multi-Agent
 ### 1. Multi-agent systems = Organized specialization
 - The first bullet emphasizes the core idea:
     - **Multi-agent systems are fundamentally about putting the right agent on the right task.**
@@ -1041,7 +1110,23 @@ IF (condition) → THEN (action)
 - This prevents confusion or overlaps.
 #### b. Expertise depth and breadth
 - This is about balancing:
-## 8. Build Multi-Agent
+    - **Highly specialized experts** (very strong on narrow tasks)
+    - **Generalist agents** (broad but less deep capabilities)
+- You need both.
+| **Type of Agent**                   | **Purpose**                                |
+| ----------------------------------- | ------------------------------------------ |
+| Expert (e.g., code generator agent) | Very accurate output for a specific domain |
+| Generalist (e.g., chat agent)       | Flexible across many tasks                 |
+
+#### c. Interface standardization
+- Agents communicate through a **uniform format** (e.g., JSON schemas, typed messages, structured prompts).
+- This ensures:
+    - Predictability
+    - Easy debugging
+    - Consistent handoffs
+- It’s similar to how microservices use standard APIs.
+
+## 9. Build Multi-Agent
 ### Why Multi-Agent Systems? 
 ### Typical Multi-Agent Communication Patterns
 #### 1. Sequential (Pipeline)
