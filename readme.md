@@ -32,6 +32,7 @@
     - [Why Multi Agent Systems](#why-multi-agent-systems)
     - [Communication Protocols](#communication-protocols)
         - [MCP](#1-model-context-protocol-mcp)
+        - [ACP](#2-ibm-agent-communication-protocol-acp)
     - [Framework Supporting Multi Agent LLM systems](#frameworks-supporting-multi-agent-llm-systems)
         - [Langgraph](#1-langgraph)
         - [Autogen](#2-autogen)
@@ -550,6 +551,17 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
 | **Scalability**      | Limited to task size                             | Can scale to handle multi-agent, multi-stage problems             |
 |**Typical Applications**| Chatbots, virtual assistants, workflow helpers   | Supply chain coordination, enterprise optimization, team leaders  |
 
+#### 1. Design
+- **AI Agent — One agent, one task**
+    - A simple agent:
+        - Does a single job
+        - Works alone
+        - Has a narrow scope
+        - 
+- **Agentic AI — Multiple agents with distinct roles**
+    - Agentic AI is like a team of AIs:
+        - Planner agent
+        - Research agent
 ## 4. The Next Generation of AI
 ![Next Revolution of AI](images/next_evalution_of_AI.png)
 ### Overview: “The next evolution of AI”
@@ -1263,7 +1275,51 @@ IF (condition) → THEN (action)
     - secure communication
     - structured message passing
     - long-running workflows
-    
+- ACP is part of **IBM’s Agentic AI architecture** (used in BeeAI in your previous table).
+##### Why ACP exists
+- Enterprises need:
+    - clear message contracts
+    - strict security
+    - audit trails
+    - 
+##### How ACP works
+- ACP defines:
+    - standardized **message formats**
+    - routing rules
+    - delivery guarantees
+    - authorization layers
+    - agent identity management
+    - lifecycle management of agent messages
+- Messages between agents look like:
+```json
+{
+  "sender": "DataAgent",
+  "receiver": "PlannerAgent",
+  "timestamp": "...",
+  "intent": "REQUEST_DATA",
+  "payload": {
+    "query": "find revenue growth for Q3"
+  }
+}
+
+```
+##### Key benefits
+- **Enterprise security**
+    - Authentication
+    - Authorization
+    - Access control
+    - Logging
+- **Scalability**
+    - ACP supports **thousands of agents running across distributed systems**.
+- **Reliability**
+    - Guaranteed delivery
+    - Message ordering
+#### Comparison Summary
+| **Protocol** | **Purpose**                                | **Strength**                            | **Use Cases**                  |
+| -------- | ------------------------------------------ | --------------------------------------- | ------------------------------ |
+| **MCP**  | Let LLMs call external tools safely        | Lightweight, modular, easy to integrate | Tools, RAG, APIs, plugins      |
+| **ACP**  | Enterprise agent-to-agent message exchange | Secure, auditable, enterprise-scale     | Multi-agent enterprise systems |
+
 ### Frameworks Supporting Multi-Agent LLM Systems
 #### 1. LangGraph
 - **Focus/Features**
@@ -1284,6 +1340,16 @@ IF (condition) → THEN (action)
 - Focus/Features
     - Agent self-organization, negotiation, adaptive collaboration
     - AutoGen (by Microsoft) is built around **conversation-driven agent collaboration**.
+- **Key capabilities**:
+1. **Self-organization**
+- Agents decide by themselves:
+    - who should speak
+    - when to stop
+    - how to collaborate
+    - when to bring in new tools
+- Agents negotiate like a team.
+2. **Negotiation Mechanism**
+- 
 #### 3. CrewAI
 #### 4. BeeAI
 #### Summary Table
