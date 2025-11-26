@@ -1,8 +1,10 @@
 # AgentHub
 ## Table Of Contents
-- [The Next Generation of AI](#the-next-generation-of-ai)
+- [The Next Generation of AI](#1-the-next-generation-of-ai)
     - [RAG](#1-rag-retrieval-augmented-generation)
-- [LangChain](#1-langchain)
+    - [Agentic AI](#2-agentic-ai)
+    - [MultiModel AI](#3-multimodal-ai)
+- [LangChain](#2-langchain)
 - [LangGraph](#2-langgraph)
     - [Key Componnets](#key-components)
     - [Fundamentals](#graph-fundamentals)
@@ -38,7 +40,73 @@
         - [Autogen](#2-autogen)
         - [Crew AI](#3-crewai)
         - [BeeAI](#4-beeai)
-## 1. LangChain
+- [Autogen]()
+## 1. The Next Generation of AI
+![Next Revolution of AI](images/next_evalution_of_AI.png)
+### Overview: “The next evolution of AI”
+- The diagram describes three major pillars that define the modern evolution of AI:
+1. RAG (Retrieval-Augmented Generation)
+2. Agentic AI
+3. Multimodal AI
+### 1. RAG (Retrieval-Augmented Generation)
+#### What RAG adds
+- RAG connects LLMs (like GPT-4 or DeepSeek) with external knowledge sources, most commonly:
+    - Vector databases (Pinecone, Chroma, FAISS)
+    - Search engines (Tavily, Google, Bing)
+    - Company documents
+    - Internal databases
+#### Benefits shown in the diagram
+
+### 2. Agentic AI
+- This is the lower-left section of the circular diagram.
+- Agentic AI gives the model the ability to:
+#### Autonomously execute tasks
+- Instead of just answering prompts, agentic AI systems:
+    - Take actions
+    - Use tools
+    - Call APIs
+    - Search the web
+    - Write files
+    - Analyze data
+    - Make decisions
+    - Iterate on results
+
+
+### 3. Multimodal AI
+- This is the right side of the diagram.
+- Multimodal models can process more than one type of data, such as:
+    - Text
+    - Images
+    - Audio
+    - Video
+    - Code
+    - Sensor data
+#### Processes diverse data types
+- This enables:
+    - Image analysis
+    - Vision + language reasoning
+    - Audio transcription + meaning extraction
+    - Video summarization
+#### Allows for more interactive user experiences
+- Examples:
+    - “Analyze this screenshot and describe the bug.”
+    - “Convert this image into HTML/CSS code.”
+    - “Transcribe this audio and summarize key points.”
+- Multimodal AI lets users interact naturally, just like humans do.
+
+### 4. “Work independently or combine to build powerful AI systems”
+- This section at the bottom explains that these components can work separately but become powerful when combined:
+- Independent examples:
+    - RAG alone → Chatbot with document memory
+    - Agent alone → Automation (no external documents)
+    - Multimodal alone → Vision model
+
+### Putting it all together — meaning of the full diagram
+- RAG → gives AI memory + factual grounding
+- Agentic AI → gives AI autonomy
+- Multimodal → gives AI richer perception
+
+## 2. LangChain
 ### What is LangChain?
 LangChain is an open-source framework that helps developers build applications powered by Large Language Models (LLMs).
 Instead of coding every piece manually, LangChain provides ready-made tools, components, and APIs to:
@@ -562,70 +630,6 @@ state["messages"].append(ToolMessage(tool_call_id="call-1", content="{'temp': 22
     - Agentic AI is like a team of AIs:
         - Planner agent
         - Research agent
-## 4. The Next Generation of AI
-![Next Revolution of AI](images/next_evalution_of_AI.png)
-### Overview: “The next evolution of AI”
-- The diagram describes three major pillars that define the modern evolution of AI:
-1. RAG (Retrieval-Augmented Generation)
-2. Agentic AI
-3. Multimodal AI
-### 1. RAG (Retrieval-Augmented Generation)
-#### What RAG adds
-- RAG connects LLMs (like GPT-4 or DeepSeek) with external knowledge sources, most commonly:
-    - Vector databases (Pinecone, Chroma, FAISS)
-    - Search engines (Tavily, Google, Bing)
-    - Company documents
-    - Internal databases
-#### Benefits shown in the diagram
-
-### 2. Agentic AI
-- This is the lower-left section of the circular diagram.
-- Agentic AI gives the model the ability to:
-#### Autonomously execute tasks
-- Instead of just answering prompts, agentic AI systems:
-    - Take actions
-    - Use tools
-    - Call APIs
-    - Search the web
-    - Write files
-    - Analyze data
-    - Make decisions
-    - Iterate on results
-
-
-### 3. Multimodal AI
-- This is the right side of the diagram.
-- Multimodal models can process more than one type of data, such as:
-    - Text
-    - Images
-    - Audio
-    - Video
-    - Code
-    - Sensor data
-#### Processes diverse data types
-- This enables:
-    - Image analysis
-    - Vision + language reasoning
-    - Audio transcription + meaning extraction
-    - Video summarization
-#### Allows for more interactive user experiences
-- Examples:
-    - “Analyze this screenshot and describe the bug.”
-    - “Convert this image into HTML/CSS code.”
-    - “Transcribe this audio and summarize key points.”
-- Multimodal AI lets users interact naturally, just like humans do.
-
-### 4. “Work independently or combine to build powerful AI systems”
-- This section at the bottom explains that these components can work separately but become powerful when combined:
-- Independent examples:
-    - RAG alone → Chatbot with document memory
-    - Agent alone → Automation (no external documents)
-    - Multimodal alone → Vision model
-
-### Putting it all together — meaning of the full diagram
-- RAG → gives AI memory + factual grounding
-- Agentic AI → gives AI autonomy
-- Multimodal → gives AI richer perception
 
 ## 5. Types of AI Agents
 ### 1. Simple reflex agents
@@ -1359,3 +1363,56 @@ IF (condition) → THEN (action)
 | **AutoGen**   | Negotiation + conversation loops    | Collaborative reasoning, code generation |
 | **CrewAI**    | Typed interfaces + strict workflows | Enterprise apps, reliable data pipelines |
 | **BeeAI**     | Enterprise orchestration + IBM ACP  | Large-scale corporate AI deployments     |
+
+## 10. Autogen
+### What is Autogen
+![What is Autogen](images/What-is-Autogen.jpg)
+- AutoGen is an open-source framework for building multi-agent AI applications.
+    - Think of AutoGen as a toolbox + runtime system allowing you to create groups of AI agents that:
+        - Communicate with each other
+        - Collaborate on tasks
+- In short:
+    - AutoGen lets you create AI systems where many LLM-based agents operate like a team.
+
+### Purpose of AutoGen
+- **Communicate naturally**
+    - Agents talk using **natural language messages**—similar to ChatGPT conversations but between agents.
+- **Cooperate to solve tasks**
+    - For example:
+        - Research agent finds information
+        - Coding agent writes code
+        - 
+### AutoGen’s 4 Major Components
+#### 1. AutoGen Studio
+- A no-code graphical interface for designing and testing multi-agent workflows.
+- 
+#### 2. AutoGen AgentChat
+- This is the fastest way to create agents.
+- Features:
+    - Simple interfaces (`AssistantAgent`, `UserProxyAgent`, etc.)
+    - Pre-built multi-agent loops
+    - Automatic message passing
+    - Conversation logging
+- It supports building:
+    - Q&A chatbots
+    - Assistant bots
+    - Multi-agent chat loops
+    - Debug conversations
+    - Customer service agents
+
+#### 3. AutoGen Core
+
+### AutoGen Use Cases
+#### 1. Code generation, execution, and debugging
+- **What this means**
+    - AutoGen can create agents that:
+        - Write code
+        - Run the code
+        - Check results
+        - Debug issues
+        - Try again automatically
+    - Agents can coordinate to produce correct code through iterative refinement.
+#### 2. Multi-agent collaboration
+- **What this means**
+    - Multiple agents work together like **a team of specialists**:
+    
