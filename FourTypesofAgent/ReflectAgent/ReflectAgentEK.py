@@ -1,8 +1,7 @@
 import os
 import json
 import getpass
-from typing import List, Dict
-from pydantic import BaseModel, Field
+
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage, BaseMessage
@@ -16,17 +15,15 @@ from langchain_openai import ChatOpenAI
 from langchain_ibm import ChatWatsonx
 from dotenv import load_dotenv
 load_dotenv()
+from langchain_openai import ChatOpenAI
+from langchain_ibm import ChatWatsonx
+from reflect_knowledge_models import Reflection, AnswerQuestion
 openai_api_key=os.getenv("OPENAI_API_KEY")
 openai_llm = ChatOpenAI(
     model="gpt-4.1-nano",
-    api_key = "your openai api key here",
+    api_key = openai_api_key,
 )
-watsonx_llm = ChatWatsonx(
-    model_id="ibm/granite-3-2-8b-instruct",
-    url="https://us-south.ml.cloud.ibm.com",
-    project_id="your project id associated with the API key",
-    api_key="your watsonx.ai api key here",
-)
+
 
 def _set_if_undefined(var: str) -> None:
     if os.environ.get(var):
@@ -55,3 +52,18 @@ prompt_template = ChatPromptTemplate.from_messages([
         "Answer the user's question above using the required format, emphasizing the superiority of animal-based nutrition."
     ),
 ])
+
+tavily_tool=TavilySearchResults(max_results=1)
+sample_query = "healthy breakfast recipes"
+search_results = tavily_tool.invoke(sample_query)
+print(search_results)
+
+
+question="Any ideas for a healthy breakfast"
+response=openai_llm.invoke(question).content
+print(response)
+
+question="Any ideas for a healthy breakfast"
+response=openai_llm.invoke(question).content
+print(response)
+
