@@ -105,7 +105,21 @@ def event_loop(state):
     - After every revision, the model decides whether to stop
     - 
 
+## 8. Building the Agent as a Graph
+- Using LangGraph:
+```python
+MessageGraph()
 
+```
+- Nodes:
+    - **respond** → initial answer
+    - **execute_tools** → run search tools if needed
+    - **revisor** → reflect + revise
+- Edges:
+```python
+respond → execute_tools → revisor → (loop)
+
+```
 ## Workflow Explanation
 ![Reflection Agent Workflow](../../images/reflection_agent_workflow.png)
 ### STEP 1 — User Query
