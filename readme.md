@@ -40,7 +40,11 @@
         - [Autogen](#2-autogen)
         - [Crew AI](#3-crewai)
         - [BeeAI](#4-beeai)
-- [Autogen]()
+- [Autogen](#10-autogen)
+- [MCP](#11-mcp)
+    - [Architecture](#architecture)
+        - [MCP Architecture Workflow](#mcp-architecture-workflow)
+    - [Lifecycle](#lifecycle)
 ## 1. The Next Generation of AI
 ![Next Revolution of AI](images/next_evalution_of_AI.png)
 ### Overview: “The next evolution of AI”
@@ -1416,3 +1420,227 @@ IF (condition) → THEN (action)
 - **What this means**
     - Multiple agents work together like **a team of specialists**:
     
+## 11. MCP
+### What is MCP
+#### 1. “MCP is an open-source standard for connecting AI applications to external systems”
+- Open-source standard
+        - Not a product
+        - Not tied to one company
+        - Anyone can implement it (Claude, ChatGPT, local LLMs, enterprise agents)
+        - Prevents vendor lock-in
+    - Similar to:
+        - HTTP for the web
+        - USB for hardware
+        - SQL for databases
+    - MCP defines **rules + structure**, not behavior.
+- Connecting AI applications
+    - An AI application is **more than a model**:
+        - ChatGPT
+        - Claude
+        - A LangChain / LangGraph agent
+        - Your own Python or Node agent
+- External systems
+    - Local files
+    - Databases
+    - APIs
+    = 
+### Architecture
+- client-host-server architecture where each host can run multiple client instances
+- It’s a 3-layer setup:
+
+#### MCP Architecture Workflow
+![MCP Architecture](images/mcp_architecture.png)
+1. **Application Host Process (Left Side)**
+- This whole yellow block is the **Host**.
+- **What the Host is**
+    - The **Host** is the trusted runtime that:
+        - Launches MCP clients
+        - Manages sessions
+        - Enforces security boundaries
+        - Decides which servers clients may talk to
+    - Examples in real life:
+        - Cursor / VS Code process
+        - Desktop AI app
+        - Backend agent service
+2. **Local Machine (Bottom Right)**
+- **Server 1 – Files & Git**
+    - This is an MCP **server** that exposes:
+        - Filesystem access
+        - Git operations
+    - It connects to:
+        - **Local Resource A**
+    - Which might be:
+        - Project directory
+        - Git repo
+        - Config files
+- **Server 2 – Database**
+    - Another MCP server, but **different responsibility**.
+    - It exposes:
+        - Database queries
+        - Reads / writes
+        - Possibly migrations or analytics
+    - It connects to:
+        - **Local Resource B**
+    - Which might be:
+        - SQLite / Postgres
+        - Vector DB
+        - Local cache
+
+#### 1. Client
+- A client is the thing that wants to use capabilities.
+- Examples:
+- What the client does:
+    - Manages the conversation state
+    - Sends MCP messages (`initialize`, `tools/call`, `resources/read`, …)
+    - Presents tool outputs to the model/user
+    - Enforces some permissions (depending on host)
+### MCP Base Protocol — Deep Dive
+- Think of MCP (Model Context Protocol) as a standardized contract between:
+    - 🧠 LLMs
+    - 🛠 Tools
+    - 🗂 External resources (files, DBs, APIs)
+    - 🧩 Agent runtimes (LangChain, IDEs, copilots, etc.)
+- It’s not a model.
+- It’s **plumbing + rules** so models can reliably talk to the outside world.
+#### 1. Base Protocol
+- “Core JSON-RPC message types”
+- **What this means**
+    - MCP uses **JSON-RPC** as its lowest-level communication format.
+    - That means every interaction follows a strict structure like:
+        ```json
+        {
+        "jsonrpc": "2.0",
+        "id": "req-123",
+        "method": "tools/call",
+        "params": {
+            "name": "search",
+            "arguments": { "query": "Latest AI news" }
+        }
+        }
+
+        ```
+- **Why JSON-RPC?**
+    - Because it gives you:
+        - Request / response pairing (`id`)
+        - Async + streaming support
+        - Tool invocation as a first-class concept
+        - Language-agnostic interoperability
+- **In practice**
+    - This is how:
+        - A model asks for a tool
+        - A client executes it
+        - A server returns structured results
+        - Errors are handled consistently
+    - 👉 Without this, tool calling would be ad-hoc, fragile, and vendor-specific.
+
+#### 2. Lifecycle Management
+- **“Connection initialization, capability negotiation, session control”**
+- **(a) Connection initialization**
+    - When a client connects to an MCP server, they don’t just start talking.
+    - They first do a handshake, like:
+        ```json
+        {
+            "method": "initialize",
+            "params": {
+                "clientInfo": {
+                "name": "my-agent",
+                "version": "1.0"
+                }
+            }
+        }
+
+        ```
+- **(b) Capability negotiation**
+    - Both sides declare what they support:
+        - Tools?
+        - Prompts?
+        - Streaming?
+        - File system access?
+        - Sampling?
+- **(c) Session control**
+### MCP Workflow
+![MCP Workflow](images/mcp_workflow.png)
+#### Phase 1 Initialization Phase
+- This entire top section answers **one question**:
+    - “Can we safely talk, and if so, how?”
+- Nothing else is allowed yet.
+1. `initialize` request
+- Client → Server
+- What it is
+    - The client’s hello message.
+- What it contains
+    - MCP protocol version
+    - Client identity
+    - Client-supported capabilities
+- Conceptually:
+```json
+{
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2025-06-18",
+    "clientInfo": {
+      "name": "my-agent",
+      "version": "1.0"
+    },
+    "capabilities": {
+      "tools": true,
+      "resources": true,
+      "prompts": false
+    }
+  }
+}
+
+```
+- Why this step exists:
+    - Prevents version mismatch
+    - Prevents calling unsupported features
+    - Allows future MCP evolution without breaking old clients
+- If you skip this:
+    - The server **must reject or ignore** everything else.
+
+2. `initialize` response
+- Server → Client (dashed arrow)
+- **What it is**
+    - The server’s acceptance + contract.
+- **What it contains**
+    - Supported protocol version
+    - Server capabilities
+    - Available tools/resources/prompts
+    - Optional limits or restrictions
+- Example idea:
+```json
+{
+  "capabilities": {
+    "tools": ["search", "read_file"],
+    "resources": true
+  }
+}
+
+```
+3. `initialized` notification
+- Client → Server
+- 
+### LifeCycle
+#### What Lifecycle Means
+- The MCP lifecycle defines how a client and server meet, agree on rules, work together, and separate cleanly.
+- Think of it like:
+    - TCP handshake + HTTP negotiation + long-lived session + graceful shutdown,
+    - but designed specifically for LLM ↔ tools ↔ resources.
+- This is critical because MCP connections are often:
+    - Stateful
+    - Tool-heavy
+    - Security-sensitive
+    - Long-running
+- The Three Lifecycle Phases
+    - 1. Initialization
+    - 2. Operation
+    - 3. Shutdown
+
+#### 1. ​Lifecycle Phases
+1. Initialization Phase
+- “Capability negotiation and protocol version agreement”
+    - The client says:
+    - “Here’s who I am, what MCP version I speak, and what I can handle.”
+- Step 1: initialize request (Client → Server)
+2. 
+#### 2. 
