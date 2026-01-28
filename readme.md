@@ -42,9 +42,16 @@
         - [BeeAI](#4-beeai)
 - [Autogen](#10-autogen)
 - [MCP](#11-mcp)
+    - [What is MCP](#what-is-mcp)
+        - [MCP is an Open Source Standard for Connecting AI Applications to External Systems](#1-mcp-is-an-open-source-standard-for-connecting-ai-applications-to-external-systems)
+        - [Using MCP AI Applications can Connect to Data Sources Tools and Workflows](#2-using-mcp-ai-applications-can-connect-to-data-sources-tools-and-workflows)
+    - [Workflows of MCP](#workflows-of-mcp)
+        - [The Center: MCP (Standardize Protocol)](#1-the-center-mcp-standardized-protocol)
+        - [Left Side: AI Applications](#2-left-side-ai-applications-consumers)
     - [Architecture](#architecture)
         - [MCP Architecture Workflow](#mcp-architecture-workflow)
     - [Lifecycle](#lifecycle)
+        - [What Lifecycle Means](#what-lifecycle-means)
 ## 1. The Next Generation of AI
 ![Next Revolution of AI](images/next_evalution_of_AI.png)
 ### Overview: “The next evolution of AI”
@@ -1424,10 +1431,10 @@ IF (condition) → THEN (action)
 ### What is MCP
 #### 1. “MCP is an open-source standard for connecting AI applications to external systems”
 - Open-source standard
-        - Not a product
-        - Not tied to one company
-        - Anyone can implement it (Claude, ChatGPT, local LLMs, enterprise agents)
-        - Prevents vendor lock-in
+    - Not a product
+    - Not tied to one company
+    - Anyone can implement it (Claude, ChatGPT, local LLMs, enterprise agents)
+    - Prevents vendor lock-in
     - Similar to:
         - HTTP for the web
         - USB for hardware
@@ -1443,7 +1450,113 @@ IF (condition) → THEN (action)
     - Local files
     - Databases
     - APIs
-    = 
+    - 
+#### 2. “Using MCP, AI applications can connect to data sources, tools, and workflows”
+- **Data Sources (Read Context)**
+    - Examples
+        - Files (.txt, .pdf, .md)
+        - Databases (Postgres, MongoDB)
+        - Knowledge bases
+        - Logs
+    - What MCP provides:
+        - Structured access
+        - Controlled scope
+        - Explicit permissions
+- **Tools (Take Actions)**
+    - Examples:
+        - Search engines
+        - Calculators
+        - Weather APIs
+        - Code execution
+        - Internal microservices
+    - Key MCP idea:
+        - **The model does not invent tools — it discovers them.**
+    - Tool metadata includes:
+        - Tool name
+        - Parameters
+        - Description
+        - Expected output format
+    - This prevents:
+        - Tool hallucination
+        - Prompt injection attacks
+        - Unsafe execution
+- **Workflows (Reason + Act)**
+    - Examples:
+        - “Search → summarize → rank”
+        - “Validate input → query DB → format result”
+        - “Apply specialized prompt templates”
+    - MCP allows:
+        - Multi-step execution
+        - Stateful reasoning
+        - Tool chaining
+    - This is what enables **true AI agents**.
+#### 3. “Enabling them to access key information and perform tasks”
+- This is the **capability jump**.
+| **Without MCP**     | **With MCP**          |
+| ------------------- | --------------------- |
+| Chatbot             | Agent                 |
+| Passive             | Active                |
+| Prompt-only         | Tool-aware            |
+| Hallucination-prone | Structured & grounded |
+- MCP changes the model from:
+“I think the answer is…”
+to
+“Let me fetch, calculate, and verify.”
+#### 4. The USB-C Analogy (Why This Is Actually Accurate)
+- “Think of MCP like a USB-C port for AI applications.”
+- This analogy is excellent, not just marketing.
+- **Why USB-C works as an analogy:**
+| **USB-C**               | **MCP**                  |
+| ----------------------- | ------------------------ |
+| Standard port           | Standard protocol        |
+| Works with many devices | Works with many tools    |
+| Clear power/data rules  | Clear context/tool rules |
+| Plug-and-play           | Discover-and-call        |
+- Before USB-C:
+    - Every device needed a different cable
+
+#### Workflows of MCP
+![MCP Workflow](./images/mcp_workflow.png)
+##### 1. The Center: MCP (Standardized Protocol)
+- **“MCP – Standardized protocol”**
+- What it means:
+    - MCP is not an app
+    - MCP is not the model
+    - MCP is not the tool
+- It is the communication contract that defines:
+    - How tools are discovered
+    - How context is requested
+    - How actions are executed
+    - How results are returned
+- Think of MCP as:
+    - The **rules of the conversation**
+    - The **API grammar** between AI and the world
+- Without MCP → everyone invents their own glue code
+- With MCP → everything plugs into the same interface
+##### 2. Left Side: AI Applications (Consumers)
+- These are **clients** of MCP.
+- **Chat interface**
+    - Claude Desktop, LibreChat
+    - What these do:
+        - Accept user input (natural language)
+        - Display responses
+        - Maintain conversation state
+    - With MCP:
+        - They can fetch files
+        - Call tools
+        - Execute workflows
+    - Without MCP:
+        - They are just chat boxes
+- **IDEs and code editors**
+    - Claude Code, Goose
+    - This is important: MCP is **not just for chat**.
+    - IDEs use MCP to:
+        - Read repositories
+        - Run linters/tests
+        - Query Git history
+        - Create commits
+    - This is how “AI pair programmers” actually work **safely**.
+    - **“Bidirectional data flow” (left side)**
 ### Architecture
 - client-host-server architecture where each host can run multiple client instances
 - It’s a 3-layer setup:
@@ -1485,7 +1598,27 @@ IF (condition) → THEN (action)
         - SQLite / Postgres
         - Vector DB
         - Local cache
-
+    - Why this separation matters:
+        - Filesystem logic ≠ DB logic
+        - Different permissions
+        - Different lifecycles
+        - Easier auditing
+3. **Internet (Top Right)**
+- This block shows **remote servers**.
+- **Server 3 – External APIs**
+    - This MCP server wraps:
+        - Web APIs
+        - SaaS services
+        - Cloud tools
+    - Examples:
+        - Web search
+        - GitHub API
+        - Jira
+        - Slack
+        - Cloud AI services
+    - It connects to:
+        - **Remote Resource C**
+        
 #### 1. Client
 - A client is the thing that wants to use capabilities.
 - Examples:
@@ -1559,7 +1692,7 @@ IF (condition) → THEN (action)
         - Sampling?
 - **(c) Session control**
 ### MCP Workflow
-![MCP Workflow](images/mcp_workflow.png)
+![MCP Workflow](images/mcp_connecting_workflow.png)
 #### Phase 1 Initialization Phase
 - This entire top section answers **one question**:
     - “Can we safely talk, and if so, how?”
@@ -1644,3 +1777,21 @@ IF (condition) → THEN (action)
 - Step 1: initialize request (Client → Server)
 2. 
 #### 2. 
+
+### Protocol Messages
+#### 1. Listing Tools (`tools/list`)
+- Purpose (WHY this exists)
+    - Before an LLM can use tools, it must discover **what tools exist**.
+    - So the client asks:
+    ```json
+        - “Hey server, what tools do you have?”
+        {
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/list",
+  "params": {
+    "cursor": "optional-cursor-value"
+  }
+}
+```
+#### 2. Calling Tools (`tools/call`)
