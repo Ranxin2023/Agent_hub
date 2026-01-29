@@ -1786,12 +1786,44 @@ to
     ```json
         - “Hey server, what tools do you have?”
         {
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/list",
-  "params": {
-    "cursor": "optional-cursor-value"
-  }
-}
-```
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list",
+    "params": {
+        "cursor": "optional-cursor-value"
+    }
+    }
+    ```
 #### 2. Calling Tools (`tools/call`)
+- **Purpose**
+    - Once the LLM chooses a tool, it must invoke it explicitly.
+- **Request (Client → Server)**
+    ```json
+    {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/call",
+    "params": {
+        "name": "get_weather",
+        "arguments": {
+        "location": "New York"
+        }
+    }
+    }
+
+    ```
+- Explanation
+| Field                  | Meaning                             |
+| ---------------------- | ----------------------------------- |
+| `method: "tools/call"` | Execute a tool                      |
+| `name`                 | Must match a tool from `tools/list` |
+| `arguments`            | Must match `inputSchema`            |
+
+#### 3. List Changed Notification
+- Purpose
+    - Tools can change at runtime.
+    - Servers notify clients when:
+        - New tools appear
+        - Tools are removed
+        - Tool schemas change
+    
