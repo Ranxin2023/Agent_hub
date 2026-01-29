@@ -1800,15 +1800,15 @@ to
 - **Request (Client → Server)**
     ```json
     {
-    "jsonrpc": "2.0",
-    "id": 2,
-    "method": "tools/call",
-    "params": {
-        "name": "get_weather",
-        "arguments": {
-        "location": "New York"
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+            "name": "get_weather",
+            "arguments": {
+            "location": "New York"
+            }
         }
-    }
     }
 
     ```
