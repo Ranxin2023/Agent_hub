@@ -39,7 +39,16 @@ Discord
     - Build AI agents
     - Want custom workflows
     - Use coding agents with tools
-
+### Power users
+- People who:
+    - Want automation
+    - Want their own AI assistant across platforms
+    - Care about privacy & control
+### Key Idea: Data Control
+- Because it’s self-hosted:
+    - Your chat messages are not stored by OpenClaw servers
+    - You control logging, storage, routing
+    - You choose which AI model to connect
 ## 3. What Makes It Different?
 ### 3.1 . Self-hosted
 - Runs on your hardware, your rules
@@ -105,5 +114,64 @@ Discord
     - iMessage
     - Slack
     - Custom plugins
+- They are **just interfaces**.
+- They do NOT:
+    - Store AI memory
+    - Decide routing
+    - Handle logic
+- They only:
+    - Receive user messages
+    - Send them to the Gateway
+- Think of them as front doors.
 ### Step 2: The Gateway (Core of the System)
+- This is the most important component.
+- The Gateway:
+    - Receives messages from chat apps
+    - Maintains session state
+    - Decides which agent handles the message
+    - Manages tool usage
+    - Stores conversation memory
+    - Routes responses back to the correct channel
+- It is the **central coordinator**.
+
 ### Step 3: Gateway → Output / Consumers
+#### 1. Pi Agent
+- This is the AI agent itself.
+- The Gateway:
+    - Sends messages to the agent
+    - Passes session context
+    - Handles tool calls
+    - Receives responses
+- This agent could:
+    - Use tools
+    - Run code
+    - Search web
+    - Execute workflows
+- Think of this like your ReAct-style agent — where the model:
+    - Thinks
+    - Calls tools
+    - Responds
+- The Gateway is what orchestrates that loop.
+
+#### 2. CLI
+- Command Line Interface.
+- This allows you to:
+    - Talk to your AI from terminal
+    - Debug
+    - Send commands
+    - Inspect sessions
+- Example:
+```nginx
+openclaw ask "summarize today's messages"
+```
+#### 3. Web Control UI
+- A browser dashboard.
+- Used for:
+    - Viewing sessions
+    - Managing agents
+    - Monitoring logs
+    - Debugging tool calls
+    - Changing settings
+- Important:
+    - It does NOT store the state.
+    - It only reads from the Gateway.
