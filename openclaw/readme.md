@@ -1,10 +1,20 @@
 # Open Claw
 ## Table of Contents
 - [What is OpenClaw?](#1-what-is-openclaw)
+    - [What Does "Self-Hosted Gateway" Mean?](#what-does-self-hosted-gateway-mean)
+    - [What Problem Does It Solve](#what-problem-does-this-solve)
 - [Who is it For?](#2-who-is-it-for)
     - [Developers](#developers)
+    - [Power Users](#power-users)
+- [Features](#features)
+    - [Channels](#1-channels)
+    - [Plugins](#2-plugins)
+    - [Routing](#3-routing)
+- [Gateway Architecture](#gateway-architecture)
+- [Agent Runtime](#agent-runtime)
+    - [Overview](#overview)
 ## 1. What is OpenClaw?
-- “OpenClaw is a self-hosted gateway that connects your favorite chat apps – WhatsApp, Telegram, Discord, iMessage, and more – to AI coding agents like Pi.”
+- *“OpenClaw is a self-hosted gateway that connects your favorite chat apps – WhatsApp, Telegram, Discord, iMessage, and more – to AI coding agents like Pi.”*
 ### What does “self-hosted gateway” mean?
 - Self-hosted = You run it on your own computer or server
 - Gateway = It acts as a bridge between:
@@ -175,3 +185,177 @@ openclaw ask "summarize today's messages"
 - Important:
     - It does NOT store the state.
     - It only reads from the Gateway.
+
+## Features
+### 1. Channels
+- *WhatsApp, Telegram, Discord, and iMessage with a single Gateway.*
+#### What this really means
+- OpenClaw can connect multiple messaging platforms to **one central AI brain**.
+- Instead of building:
+    - A WhatsApp bot
+    - A Telegram bot
+    - A Discord bot
+    - An iMessage integration
+- You connect all of them to the Gateway once.
+#### Architecture implication
+```markdown
+WhatsApp
+Telegram
+Discord
+iMessage
+     ↓
+   Gateway
+     ↓
+   AI Agent
+
+```
+#### Why this is powerful
+- Unified memory across platforms
+- No duplicated bot logic
+- One AI personality everywhere
+- Easier maintenance
+
+### 2. Plugins
+- *Add Mattermost and more with extensions.*
+#### What are plugins here?
+- Plugins are **extensible connectors or capability modules**.
+- They can:
+    - Add support for new chat platforms
+    - Add new tool integrations
+    - Add custom logic
+    - Extend routing rules
+#### Think of it like:
+- Browser extensions
+- LangChain tools
+- Middleware in Express.js
+#### Example
+- You could write a plugin that:
+    - Connects to Jira
+    - Connects to GitHub
+    - Connects to your CRM
+    - Adds Slack support
+#### Why it matters
+- It prevents the core from becoming bloated.
+- 
+### 3. Routing
+- *Multi-agent routing with isolated sessions.*
+- This is one of the most advanced features.
+## Gateway Architecture
+### 1. “A single long-lived Gateway owns all messaging surfaces”
+- **What does “long-lived” mean?**
+    - The Gateway is:
+        - A persistent process
+        - Always running
+        - Not serverless
+        - Not stateless
+        - Not per-request
+
+### 2. Control-plane clients connect via WebSocket
+- macOS app, CLI, web UI, automations connect over WebSocket
+#### What is the control plane?
+- Control plane = management layer.
+- Not user chat traffic.
+- These are admin / management clients.
+- Examples:
+    - Web dashboard
+    - CLI
+    - macOS companion app
+    - Automation scripts
+- They connect over:
+```css
+ws://127.0.0.1:18789
+```
+## Agent Runtime
+### Overview
+- “OpenClaw runs a single embedded agent runtime derived from pi-mono.”
+
+### Workspace (Required)
+- This is one of the most critical design decisions.
+    - OpenClaw uses a single agent workspace directory as the agent’s only working directory (cwd) for tools and context.
+
+### Bootstrap files (injected)
+- These live inside your workspace directory.
+#### 1. AGENTS.md
+- Operating instructions + “memory”
+- This is like:
+    - System rules
+    - Long-term instructions
+    - Persistent operational memory
+- It might contain things like:
+```pgsql
+You are a coding assistant specialized in Python and TypeScript.
+Prefer concise answers.
+Always use tools when file access is needed.
+
+```
+- This is persistent across sessions.
+- It is injected into every new session.
+#### 2. SOUL.md
+- Persona, boundaries, tone
+- This controls personality.
+- Example:
+```vbnet
+Tone: Calm, precise, slightly playful.
+Boundaries: Do not give medical advice.
+Style: Use bullet points where helpful.
+
+```
+- This is separated from AGENTS.md intentionally.
+- Why?
+    - You might want to change tone without changing logic.
+    - Clean separation of behavior vs personality.
+#### 3. TOOLS.md
+- User-maintained tool notes (e.g. img, sag, conventions)
+- This is for tool usage conventions.
+- Example:
+```css
+Use img for image generation.
+Use sag for structured agent generation.
+Never run shell commands without explaining why.
+
+```
+- This gives the agent guidance on how tools should be used.
+- This is brilliant because:
+    - You can customize tool behavior without modifying code.
+
+#### 4. BOOTSTRAP.md
+- *One-time first-run ritual (deleted after completion)*
+- This is special.
+- It only exists for:
+    - A brand new workspace.
+- Purpose:
+    - Initial setup instructions
+    - One-time onboarding
+    - Agent self-initialization
+- Example:
+```pgsql
+Ask the user what their preferred language is.
+Create a project scaffold.
+Initialize config files.
+
+```
+- After it's completed:
+- You delete it.
+#### 5. IDENTITY.md
+- *Agent name/vibe/emoji*
+- Example:
+```makefile
+Name: Nova
+Emoji: 🌌
+Vibe: Futuristic AI research assistant
+
+```
+- This allows:
+    - Branding
+    - Multiple personalities
+    - Multi-agent setups
+- Very clean separation of identity from logic.
+#### 6. USER.md
+- *User profile + preferred address*
+- Example:
+```pgsql
+User name: John
+Preferred address: Boss
+Primary interests: AI, full-stack engineering
+```
+- This gives the agent user context without storing it in code.
