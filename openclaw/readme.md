@@ -949,8 +949,26 @@ github-skill@2.0.0
     4. Think again
     5. Call next tool
     6. Call next tool
-
+- Each step:
+    - Costs tokens
+    - Requires reasoning
+    - Is probabilistic
+- This creates:
+    - Expensive orchestration
+    - Unpredictable behavior
+    - Fragile multi-step flows
 #### What Lobster Does Instead
+```code
+Pipeline:
+  Step 1 → Fetch data
+  Step 2 → Transform data
+  Step 3 → Send email (approval required)
+  Step 4 → Log result
+```
+- Then OpenClaw runs it as:
+    - *One deterministic operation.*
+- The LLM calls Lobster once.
+- Lobster handles everything internally.
 
 ### LLM-Task
 #### What Is `llm-task`?
@@ -1016,8 +1034,8 @@ git status
     - They do NOT see each other’s processes.
     - Process isolation is enforced per agent.
 - This prevents:
-    - This prevents:
     - Cross-agent interference
+    - Accidental process control
 #### Parameters
 - `command` (required)
 ```json
@@ -1143,6 +1161,8 @@ git status
     - Creates a new file
     - Adds the listed lines
     - Each line starts with `+`
+    - The `+` means:
+        - *This line is added.*
 - **2. Update File**
     ```plain text
     *** Update File: src/app.ts
@@ -1154,3 +1174,36 @@ git status
         - `-` means remove
         - `+` means add
         - `@@` marks a hunk (section of changes)
+- **3. Delete File**
+    ```plain text
+    *** Delete File: obsolete.txt
+    ```
+    - Deletes the file entirely.
+
+#### Multi-File Example
+```plain text
+*** Begin Patch
+*** Add File: new.js
++console.log("Hello");
+
+*** Update File: app.js
+@@
+-console.log("Old");
++console.log("New");
+
+*** Delete File: old.js
+*** End Patch
+```
+#### Why This Is Important for AI Agents
+- Without structured patching:
+    - Rewrite entire files
+    - Accidentally remove content
+    - Break indentation
+    - Overwrite unrelated sections
+    - Create merge conflicts
+- With `apply_patch`:
+    - Only specified lines change
+    - Changes are deterministic
+    - Easier to audit
+    - Easier to validate
+    - Safer to review
