@@ -11,6 +11,9 @@
     - [Plugins](#2-plugins)
     - [Routing](#3-routing)
 - [Gateway Architecture](#gateway-architecture)
+    - [A Single Long Lived Gateway Owns ALl Messaging Surfaces](#1-a-single-long-lived-gateway-owns-all-messaging-surfaces)
+    - [Control Plane Clients COnnect Via WebSocket](#2-control-plane-clients-connect-via-websocket)
+        - [What Is the Control Plane](#what-is-the-control-plane)
 - [Agent Runtime](#agent-runtime)
     - [Overview](#overview)
     - [Workspace](#workspace-required)
@@ -18,12 +21,27 @@
         - [Agents.md](#1-agentsmd)
         - [SOUL.md](#2-soulmd)
         - [TOOLS.md](#3-toolsmd)
+- [Canvas](#canvas)
 - [Openclaw Skills](#openclaw-skills)
     - [What Are Skills](#what-are-skills)
     - [What's Inside A Skill](#whats-inside-a-skill)
     - [Why Skills Exist](#why-skills-exist)
     - [AgentSkills-Compatible](#agentskills-compatible)
 - [Slash](#slash)
+    - [Big Idea](#big-idea-1)
+    - [Commands](#commands)
+    - [Directives](#directives)
+        - [How Directives Work](#how-directives-work)
+        - [Why Stripo Directives](#why-strip-directives)
+        - [Authorization Rules](#authorization-rules)
+        - [Inline Shortcuts](#inline-shortcuts)
+- [ClawHub](#clawhub)
+    - [What Is ClawHub](#what-is-clawhub)
+    - [What Is Being Shared](#what-is-being-shared)
+    - [What You can Do With ClawHub](#what-you-can-do-with-clawhub)
+        - [Search Skills](#1-search-skills)
+- [Build In Tools](#build-in-tools)
+    - [Lobster](#lobster)
 ## 1. What is OpenClaw?
 - *“OpenClaw is a self-hosted gateway that connects your favorite chat apps – WhatsApp, Telegram, Discord, iMessage, and more – to AI coding agents like Pi.”*
 ### What does “self-hosted gateway” mean?
@@ -251,6 +269,12 @@ iMessage
 ### 3. Routing
 - *Multi-agent routing with isolated sessions.*
 - This is one of the most advanced features.
+#### Multi-agent routing
+- This means the Gateway can decide:
+    - Coding question → Coding agent
+    - Weather question → Weather agent
+    - Math question → Math tool agent
+    - Admin command → System agent
 ## Gateway Architecture
 ### 1. “A single long-lived Gateway owns all messaging surfaces”
 - **What does “long-lived” mean?**
@@ -276,6 +300,63 @@ iMessage
 ```css
 ws://127.0.0.1:18789
 ```
+### 3. Nodes also connect over WebSocket
+- *Nodes (macOS/iOS/Android/headless) connect over WebSocket, declaring role: node*
+#### There are two types of WebSocket clients:
+- **Control clients**
+    - Web UI
+    - CLI
+    - Admin tools
+- **Nodes**
+    - Devices
+    - Mobile apps
+    - Headless instances
+- When a node connects, it declares:
+```code
+role: node
+```
+#### What are explicit caps/commands?
+- Caps = capabilities.
+- When a node connects, it might declare:
+    - I can render Canvas
+    - I can capture camera input
+    - I can receive push notifications
+    - I can run local commands
+- The Gateway then knows what this node can do.
+- This allows:
+    - Distributed AI systems
+    - Device-aware routing
+    - Capability-based orchestration
+### 4. “One Gateway per host”
+- This is a strict architectural rule.
+- You should NOT run:
+    - 2 Gateways on same machine
+    - Multiple WhatsApp sessions from same host
+- Why?
+    - WhatsApp sessions must be unique
+    - State must not fork
+    - Ports would conflict
+    - Session files could corrupt
+- This ensures:
+    - One authority
+    - One state store
+    - One routing brain
+
+### 5. The Canvas Host
+- The canvas host is served by the Gateway HTTP server under:
+```code
+The canvas host is served by the Gateway HTTP server under:
+```
+#### What is Canvas?
+- Canvas likely means:
+    - A dynamic UI environment
+    - Agent-editable HTML/CSS/JS
+    - Structured rendering surface
+- Instead of plain chat, AI can:
+    - Render forms
+    - Render forms
+    - Render interactive components
+
 ## Agent Runtime
 ### Overview
 - “OpenClaw runs a single embedded agent runtime derived from pi-mono.”
@@ -370,6 +451,61 @@ Preferred address: Boss
 Primary interests: AI, full-stack engineering
 ```
 - This gives the agent user context without storing it in code.
+
+## Canvas
+### What it is
+- Canvas in OpenClaw is a **live, agent-driven visual workspace** — essentially a display surface that your AI agent can render content to and control in real time.
+- Here's what it does in practice:
+    -  Canvas is a separate hosted surface (running on port `18793` by default) that acts like a screen your agent can "push" content to — think of it as a live visual output panel alongside your chat.
+### Key capabilities:
+- The agent can push content, UI, or code output directly to the Canvas
+- You can view it as a live, updating display
+- iOS and Android nodes expose the Canvas surface on mobile devices
+- The macOS app includes voice trigger forwarding and the Canvas surface together
+### Common Commands
+#### 1. `openclaw canvas push` — Send Content to Canvas
+- This is the primary command for rendering content on the Canvas surface. It uses OpenClaw's A2UI (Agent-to-UI) system to push structured UI components.
+- **What it does**
+    - Sends A2UI-formatted JSONL data to the Canvas panel, which renders it as a live visual interface — text, columns, buttons, etc.
+- **Example JSONL payload:**
+```jsonl
+{
+    "surfaceUpdate":
+    {
+        "surfaceId":"main",
+        "components":[
+            {
+                "id":"root",
+                "component":
+                {
+                    "Column":{"children":{"explicitList":["title","content"]}}
+                }
+            },
+            {
+                "id":"title",
+                "component":{"Text":{"text":{"literalString":"My Dashboard"},"usageHint":"h1"}}
+            },
+            {
+                "id":"content",
+                "component":{"Text":{"text":{"literalString":"Agent report goes here."},"usageHint":"body"}}
+            }
+        ]
+    }
+}
+{
+    "beginRendering":{"surfaceId":"main","root":"root"}
+}
+```
+#### 2. `openclaw canvas reset` — Clear Canvas
+- **What it does**: Wipes the Canvas surface clean, removing whatever content was previously pushed. Returns it to the blank scaffold (or `index.html` if one exists).
+- 
+### How Canvas is used:
+- Instead of only reading text replies in WhatsApp/Telegram, the agent can simultaneously render something visual on Canvas
+- Possible visual outputs include: a dashboard, a rendered webpage summary, an image, or dynamic UI via OpenClaw's A2UI system
+#### In the context of your project files (`web_socket_agent.py`, `server.py`, etc.):
+- Your agents are currently only doing text-based chat over WebSocket/HTTP
+- To use Canvas, you would need to send canvas-specific event types through the OpenClaw Gateway WebSocket protocol
+- This means replacing or supplementing plain `send_message` events with canvas-targeted commands
 
 ## Openclaw Skills
 ### What Are Skills?
@@ -550,9 +686,24 @@ call the search tool with a concise query.
 ```code 
 /status
 ```
+- Example (invalid):
+```code
+/status what is going on?
+```
+- Commands are processed immediately by the Gateway.
+- The model never sees them.
 ### Directives
 - Directives are different from commands.
 - Examples:
+```code
+/think
+/verbose
+/reasoning
+/elevated
+/exec
+/model
+/queue
+```
 #### How Directives Work
 - **1. Inline Directives (Normal Chat)**
 ```code
@@ -567,3 +718,232 @@ call the search tool with a concise query.
 ```code 
 /verbose
 ```
+- When the message contains only directives:
+    - It persists to the session.
+    - It modifies session-level behavior.
+    - Gateway replies with acknowledgment.
+- Now all future messages may be verbose.
+#### Why Strip Directives?
+- The model should not see:
+```code
+/verbose Explain something
+```
+- Instead, it sees:
+```code
+Explain something
+```
+- The Gateway handles the behavior flag separately.
+- This keeps:
+    - Clean prompts
+    - Clear control boundaries
+    - Predictable behavior
+#### Authorization Rules
+- Directives only work for:
+    - *Authorized senders.*
+- If not authorized:
+    - Directives are treated as plain text.
+    - No special behavior happens.
+- Authorization is determined by:
+    - 1. `commands.allowFrom`
+    - 2. Channel allowlists / pairing
+    - 3. `commands.useAccessGroups`
+- If `commands.allowFrom` is set:
+    - It overrides everything else.
+    - Only those users can issue directives.
+- This prevents random users from changing system behavior.
+#### Inline Shortcuts
+- These are special commands:
+```code
+/help
+/commands
+/status
+/whoami
+/id
+```
+- What does the above special commands do
+1. `/help`
+- **What it does**
+    - Displays basic usage help.
+    - Typically shows:
+        - How slash commands work
+        - Available directives
+        - How to use `/bash`
+        - How authorization works
+        - Possibly current channel info
+- **What it does NOT do**
+    - It does not call the LLM
+    - It does not generate AI content
+    - It does not affect session state
+2. `/commands`
+- **What it does**
+    - Lists all available slash commands and directives.
+    - For example, it might show:
+    ```
+    /help
+    /status
+    /whoami
+    /verbose
+    /model
+    /bash
+    ...
+    ```
+- This is useful for:
+    - Discovering features
+    - Debugging permissions
+    - Seeing which directives are enabled
+- Again:
+    - Handled by Gateway
+    - No LLM involvement
+
+3. `/status`
+- **What it does**
+    - Shows the current runtime state of the Gateway.
+    - It may display things like:
+        - Current model in use
+        - Session ID
+        - Active directives
+        - Connected channels
+        - Node status
+        - Plugin status
+        - Workspace path
+    - This is basically:
+        - *“System health + configuration snapshot”*
+    - Very useful for debugging.
+4. `/whoami`
+- **What it does**
+    - Tells you who the Gateway thinks you are.
+    - This may include:
+        - Your internal user ID
+        - Channel identity
+        - Authorization group
+        - Whether you are authorized for directives
+        - Pairing status
+    - This is important because:
+        - Slash directives only work for authorized users.
+    - So `/whoami` helps confirm:
+        - Why something worked
+        - Why something didn’t
+
+5. `/id`
+- **What it does**
+    - Shows your sender ID or channel-specific identifier.
+- **For example:**
+    - WhatsApp JID
+    - Telegram user ID
+    - Discord user ID
+- This is useful for:
+    - Setting up `commands.allowFrom`
+    - Debugging permissions
+    - Pairing devices
+    - Granting admin rights
+
+### Key Difference Between Commands and Directives
+
+| **Type**  | **Format** |**Who Handles**|**Visible to Model?**| **Purpose**   |
+| --------- | ---------- | ----------- | ----------------- | ------------- |
+| Command   | `/status`  | Gateway     | ❌ No              | System action |
+| Directive | `/verbose` | Gateway     | Sometimes         | Behavior hint |
+
+## ClawHub
+### What Is ClawHub?
+- *“ClawHub is the public skill registry for OpenClaw.”*
+- ClawHub is:
+    - A central website/service
+    - Where skills are published
+    - Shared publicly
+    - Versioned
+    - Discoverable
+### What Is Being Shared?
+- Skills.
+### What You Can Do With ClawHub
+#### 1. Search skills
+#### 2. Install skills
+- CLI might do something like:
+```code
+openclaw skills install github-issues
+```
+- This likely installs into:
+```code
+~/.openclaw/skills
+```
+#### 3. Update skills
+```code 
+openclaw skills update github-issues
+```
+#### 4. Publish skills
+- If you create your own skill:
+```code
+my-skill/
+   SKILL.md
+```
+- You can publish it to ClawHub.
+### What ClawHub Is (Architecturally)
+#### 1. A Public Registry
+- Like:
+    - npmjs.com
+    - PyPI
+    - Docker Hub
+    - VSCode Marketplace
+- But specifically for OpenClaw skills.
+#### 2. A Versioned Store
+- Skills are versioned.
+- Example:
+```code
+github-skill@1.0.0
+github-skill@1.1.0
+github-skill@2.0.0
+```
+- You can lock versions
+- Upgrade safely
+- Avoid breaking changes
+#### 3. A Discovery Surface
+- ClawHub supports:
+    - Search
+    - Tags
+
+## Build-In Tools
+### Lobster
+#### What Is Lobster?
+- *Typed workflow runtime for OpenClaw — composable pipelines with approval gates.*
+- In simple terms:
+    - Lobster is a **workflow engine** inside OpenClaw.
+
+#### What Problem Does It Solve?
+- Without Lobster:
+    - The LLM must:
+    1. Think
+    2. Call tool
+    3. Call tool
+    4. Think again
+    5. Call next tool
+    6. Call next tool
+
+#### What Lobster Does Instead
+### LLM-Task
+#### What Is `llm-task`?
+- *“llm-task is an optional plugin tool that runs a JSON-only LLM task and returns structured output (optionally validated against JSON Schema).”*
+- In simple terms:
+    - llm-task is a controlled way to call an LLM and force it to return strict JSON output instead of free-form text.
+- It is:
+    - A tool
+    - Not raw chat
+    - Not free reasoning
+    - Not free reasoning
+#### Why It Exists
+- Normally, if you ask an LLM:
+    - Normally, if you ask an LLM:
+- It might return:
+    ```code
+    Name: John
+    Email: john@example.com
+    ```
+- But maybe not in consistent format.
+- That’s bad for workflows.
+- Instead, `llm-task` enforces:
+```json
+{
+  "name": "John",
+  "email": "john@example.com"
+}
+```
+- And optionally validates it against a schema.
