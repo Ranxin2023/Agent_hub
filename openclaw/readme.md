@@ -14,6 +14,10 @@
     - [A Single Long Lived Gateway Owns ALl Messaging Surfaces](#1-a-single-long-lived-gateway-owns-all-messaging-surfaces)
     - [Control Plane Clients COnnect Via WebSocket](#2-control-plane-clients-connect-via-websocket)
         - [What Is the Control Plane](#what-is-the-control-plane)
+    - [Nodes Also Connect Over WebSocket](#3-nodes-also-connect-over-websocket)
+        - [There Are Two Types of WebSocket Clients](#there-are-two-types-of-websocket-clients)
+        - [What Are Explicit Caps/Commands](#what-are-explicit-capscommands)
+    - [one Gateway Per Host](#4-one-gateway-per-host)
 - [Agent Runtime](#agent-runtime)
     - [Overview](#overview)
     - [Workspace](#workspace-required)
@@ -22,6 +26,11 @@
         - [SOUL.md](#2-soulmd)
         - [TOOLS.md](#3-toolsmd)
 - [Canvas](#canvas)
+    - [What It Is](#what-it-is)
+    - [Key Capabilities](#key-capabilities)
+    - [Common Commands](#common-commands)
+        - [Openclaw Canvas Push - Send Content to Canvas](#1-openclaw-canvas-push--send-content-to-canvas)
+        - [Openclaw Canvas Reset - Clear Canvas](#2-openclaw-canvas-reset--clear-canvas)
 - [Openclaw Skills](#openclaw-skills)
     - [What Are Skills](#what-are-skills)
     - [What's Inside A Skill](#whats-inside-a-skill)
@@ -40,8 +49,31 @@
     - [What Is Being Shared](#what-is-being-shared)
     - [What You can Do With ClawHub](#what-you-can-do-with-clawhub)
         - [Search Skills](#1-search-skills)
+        - [Install Skills](#2-install-skills)
+        - [Update Skills](#3-update-skills)
 - [Build In Tools](#build-in-tools)
     - [Lobster](#lobster)
+        - [What Is Lobster](#what-is-lobster)
+        - [What Problem Does It Solve](#what-problem-does-it-solve)
+        - [What Lobster Does Instead](#what-lobster-does-instead)
+    - [LLM Task](#llm-task)
+        - [What is LLM Task](#what-is-llm-task)
+        - [Why It Exists](#why-it-exists)
+    - [Exec Tools](#exec-tool)
+        - [What Is The Exec Tool](#what-is-the-exec-tool)
+        - [Foreground vs Background Execution](#foreground-vs-background-execution)
+        - [BackGround Sessions are Per Agent](#background-sessions-are-per-agent)
+        - [Parameters](#parameters)
+        - [Example Use Cases](#example-use-cases)
+    - [Web Tools](#web-tools)
+        - [What Are Web Tools](#what-are-web-tools)
+        - [Web Search](#1-web_search)
+        - [Web Fetch](#2-web_fetch)
+    - [Apply Patch Tools](#apply_patch-tools)
+        - [What Is Apply Patch](#what-is-apply_patch)
+        - [Why Not Just Use Edit](#why-not-just-use-edit)
+        - [Patch Format Structure](#patch-format-structure)
+        - [File Operations Supported](#file-operations-supported)
 ## 1. What is OpenClaw?
 - *“OpenClaw is a self-hosted gateway that connects your favorite chat apps – WhatsApp, Telegram, Discord, iMessage, and more – to AI coding agents like Pi.”*
 ### What does “self-hosted gateway” mean?
@@ -919,6 +951,7 @@ github-skill@2.0.0
     6. Call next tool
 
 #### What Lobster Does Instead
+
 ### LLM-Task
 #### What Is `llm-task`?
 - *“llm-task is an optional plugin tool that runs a JSON-only LLM task and returns structured output (optionally validated against JSON Schema).”*
@@ -947,3 +980,177 @@ github-skill@2.0.0
 }
 ```
 - And optionally validates it against a schema.
+### Exec Tool
+#### What Is the Exec Tool?
+- *“Run shell commands in the workspace.”*
+- The agent can execute commands like:
+```bash
+ls
+npm install
+python script.py
+git status
+```
+- But only:
+    - Inside the workspace (by default)
+    - Under controlled security rules
+    - With optional approvals
+    - With optional sandboxing
+#### Foreground vs Background Execution
+- **1. Foreground (default)**
+    - The command runs:
+        - The command runs:
+        - Waits for completion
+        - Returns output
+- **2. Background (via `process`)**
+    - If background execution is allowed:
+        - The command runs asynchronously
+        - The agent gets a process handle
+        - It can resume or check later
+- What If process Is Disallowed?
+    - It ignores `yieldMs`
+    - Ignores `background`
+    - Runs synchronously
+
+#### **Background Sessions Are Per-Agent**
+- If two agents run background jobs:
+    - They do NOT see each other’s processes.
+    - Process isolation is enforced per agent.
+- This prevents:
+    - This prevents:
+    - Cross-agent interference
+#### Parameters
+- `command` (required)
+```json
+{ "command": "npm run build" }
+```
+- `workdir`
+- `env`
+- `yieldMs` (default 10000)
+#### Example Use Cases
+1. **Run tests**
+```json
+{
+  "command": "npm test"
+}
+```
+2. **Start dev server**
+```json
+{
+  "command": "make deploy",
+  "ask": "always"
+}
+```
+3. **Compile code with approval**
+```json
+{
+  "command": "make deploy",
+  "ask": "always"
+}
+```
+4. **Run on mobile node**
+```json
+{
+  "command": "ls",
+  "host": "node",
+  "node": "iphone-01"
+}
+```
+
+### Web Tools
+#### What Are Web Tools?
+- OpenClaw includes two built-in web tools:
+1. `web_search`
+2. `web_fetch`
+- They are:
+    - Lightweight
+    - Non-browser
+    - Deterministic
+    - Structured
+    - Safe by design
+- They are not full browser automation.
+#### 1. `web_search`
+- *Search the web via Brave Search API (default) or Perplexity Sonar.*
+- This tool performs web search queries.
+- This tool performs web search queries.
+- It does NOT scrape pages itself.
+#### 2. `web_fetch`
+- *HTTP fetch + readable extraction (HTML → markdown/text)*
+- This tool:
+    - Fetches a URL via HTTP GET
+    - Extracts readable content
+    - Converts HTML into markdown or plain text
+- It does NOT:
+    - Execute JavaScript
+    - Render dynamic sites
+    - Render dynamic sites
+#### What It’s Good For
+- Static blog posts
+- Documentation
+- News articles
+- Public pages
+- README files
+#### What It Cannot Do
+- Load React apps
+- Execute JS-heavy pages
+- Handle login sessions
+- Fill forms
+- Click buttons
+#### Important Distinction
+| Tool         | Purpose         | Executes JS? |
+| ------------ | --------------- | ------------ |
+| web_search   | Find URLs       | ❌ No         |
+| web_fetch    | Read content    | ❌ No         |
+| Browser tool | Full automation | ✅ Yes        |
+- Web tools are lightweight and cheap.
+- Browser tool is heavy and powerful.
+
+### `apply_patch` Tools
+#### What is `apply_patch`
+- *“Apply file changes using a structured patch format.”*
+- It allows the agent to:
+    - Add files
+    - Update files
+    - Delete files
+    - Modify multiple files at once
+    - Modify multiple sections inside a file
+- Using a **strict patch format**.
+#### Why Not Just Use Edit?
+- *“Ideal for multi-file or multi-hunk edits where a single edit call would be brittle.”*
+- If you use a simple edit tool:
+    - It might replace the entire file
+    - It might break formatting
+    - It may overwrite unintended content
+    - It cannot safely modify multiple sections
+- apply_patch solves this by:
+    - Being diff-based
+    - Being explicit
+    - Being structured
+    - Being predictable
+#### Patch Format Structure
+- It must follow this format:
+```plan text
+*** Begin Patch
+...
+*** End Patch
+```
+#### File Operations Supported
+- **1. Add File**
+    ```plain text
+    *** Add File: path/to/file.txt
+    +line 1
+    +line 2
+    ```
+    - Creates a new file
+    - Adds the listed lines
+    - Each line starts with `+`
+- **2. Update File**
+    ```plain text
+    *** Update File: src/app.ts
+    @@
+    -old line
+    +new line
+    ```
+    - This uses diff-style syntax.
+        - `-` means remove
+        - `+` means add
+        - `@@` marks a hunk (section of changes)
