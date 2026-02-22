@@ -1,4 +1,5 @@
 .env
-/resources/*
+/resources
 __pycache__
 nul
+/openclaw/old_code
