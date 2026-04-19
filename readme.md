@@ -1404,8 +1404,36 @@ IF (condition) → THEN (action)
     - when to bring in new tools
 - Agents negotiate like a team.
 2. **Negotiation Mechanism**
-- 
+- Agents can debate:
+    - "Your answer has an error."
+    - "I need more context."
+    - "Let me search the web."
+
 #### 3. CrewAI
+- **Focus/Features**
+    - Structured workflows, strict typed interfaces (Pydantic), high-fidelity data passing
+    - CrewAI is similar to AutoGen but with more strict structure and engineering discipline.
+#### **Key capabilities**
+**1. Structured workflows**
+- CrewAI forces you to define:
+    - roles
+    - tasks
+    - agents
+    - tools
+    - expected inputs/outputs
+**2. Strict typed interfaces (Pydantic)**
+- Data between agents must follow Pydantic models:
+```python
+class AnalysisOutput(BaseModel):
+    key_points: List[str]
+    conclusion: str
+```
+- This prevents:
+    - malformed responses
+    - hallucinated fields
+    - ambiguous data
+
+- 
 #### 4. BeeAI
 #### Summary Table
 | **Framework** | **Strength**                        | **Best For**                             |
