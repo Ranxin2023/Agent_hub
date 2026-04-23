@@ -8,6 +8,7 @@
     - [Identify the core Traits of Agentic AI Systems](#1-identify-the-core-traits-of-agentic-ai-systems)
     - [Describe the Benefits and CHallenges of Multi-Agent Architectures](#2-describe-the-benefits-and-challenges-of-multi-agent-architectures)
 - [Key Characteristics of AI Agents](#key-characteristics-of-ai-agents)
+- [Summary of AI Frameworks](#summary-of-ai-frameworks)
 ## 1. Key Frameowkrs
 ### 1.1 Langgraph
 - Focus: Workflow-based AI systems
@@ -104,3 +105,49 @@
     - Ask user?
     - Continue reasoning?
     - Stop?
+
+## Summary of AI Frameworks
+### All tips
+- BeeAI is a cutting-edge, open-source platform for building production-ready AI agents
+
+- You can create an AI conversation in BeeAI by importing the necessary modules, initializing the chat model, defining the conversation messages, and running the model asynchronously with Python's async and await syntax
+
+- Dynamic prompt templates enable the creation of reusable prompts with variable data
+
+- BeeAI can generate structured outputs using Pydantic schemas
+
+- Conversational memory is managed with the UnconstrainedMemory class
+
+- The key benefits of using the BeeAI framework include modularity, structured outputs, async execution, multi-agent support, standards compliance, and observability
+
+- Agents maintain a persistent state, use external tools, and follow behavioral requirements
+
+- The RequirementAgent class is used to build intelligent, controllable agents
+
+- The UnconstrainedMemory class provides a persistent context for an agent
+
+- Additional capabilities can be added to agents by integrating tools
+
+- ThinkTool enables agents to engage in explicit thinking processes before providing answers
+
+- BeeAI's requirements system provides fine-grained control of agent behavior.
+
+- The ReAct pattern supports reasoning and acting in cycles
+
+
+### 1. What BeeAI Actually Is
+- **BeeAI = a framework for building real-world, production-ready AI agents**
+- BeeAI gives you:
+    - Structure
+    - Control
+    - State
+    - Tool integration
+    - Multi-agent coordination
+
+### 2. Building a Basic AI Conversation
+- You create a conversation by:
+1. Import modules
+2. Initialize model
+3. Define messages
+4. Run asynchronously
+
