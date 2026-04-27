@@ -8,7 +8,9 @@
     - [Identify the core Traits of Agentic AI Systems](#1-identify-the-core-traits-of-agentic-ai-systems)
     - [Describe the Benefits and CHallenges of Multi-Agent Architectures](#2-describe-the-benefits-and-challenges-of-multi-agent-architectures)
 - [Key Characteristics of AI Agents](#key-characteristics-of-ai-agents)
-- [Summary of AI Frameworks](#summary-of-ai-frameworks)
+- [Summary of CrewAI](#summary-of-crewai)
+    - [](#all-tips)
+- [Summary of BeeAI](#summary-of-beeai)
 ## 1. Key Frameowkrs
 ### 1.1 Langgraph
 - Focus: Workflow-based AI systems
@@ -106,7 +108,41 @@
     - Continue reasoning?
     - Stop?
 
-## Summary of AI Frameworks
+## Summary of CrewAI
+### All tips of CrewAI
+
+- CrewAI is designed for multi-agent collaboration, with agents assigned clear roles and tasks to simulate human-like teamwork
+
+- Tools are standard components in AI workflows (for example, APIs and search engines) that can be used by either the Agent or the Task.
+
+- The Crew object combines agents, tasks, the LLM, and tools into a coordinated workflow.
+
+- CrewOutput captures the final result, task outputs, and token usage, giving a full snapshot of what was generated and its cost
+
+- CrewAI lets you build multi-agent workflows by defining agents with specific roles, goals, and tasks, then grouping them in a Crew for sequential execution
+
+- YAML allows you to define agents and tasks outside of Python, simplifying updates without touching code
+
+- The @CrewBase decorator loads YAML-defined components as methods, making them easy to call and integrate into a Python script or notebook
+
+- Custom functions enhance CrewAI by enabling domain-specific tools that improve flexibility and control
+
+- An agent-centric workflow assigns tools directly to the agent, letting them choose the best tool based on the query
+
+- A task-centric workflow attaches tools to individual tasks, guiding the agent step by step through a fixed process
+
+### 1. What CrewAI is REALLY about
+- **CrewAI = a framework for simulating a team of AI agents working together**
+### 🤝 2. Multi-Agent Collaboration (Core Idea)
+- *“Agents assigned clear roles and tasks”*
+#### Example
+| Agent      | Role           | Task             |
+| ---------- | -------------- | ---------------- |
+| Researcher | Finds info     | Search data      |
+| Analyst    | Processes info | Extract insights |
+| Writer     | Communicates   | Generate report  |
+
+## Summary of BEEAI
 ### All tips
 - BeeAI is a cutting-edge, open-source platform for building production-ready AI agents
 
@@ -150,4 +186,21 @@
 2. Initialize model
 3. Define messages
 4. Run asynchronously
-
+#### 💡 What this really means
+- Instead of:
+```python
+response = model("Hello")
+```
+- You do:
+```python
+messages = [
+  {"role": "user", "content": "Hello"}
+]
+await model.run(messages)
+```
+### 3. Dynamic Prompt Templates
+- *“Reusable prompts with variable data”*
+#### Why this matters
+- Reusable across tasks
+- Cleaner architecture
+- Easier debugging
